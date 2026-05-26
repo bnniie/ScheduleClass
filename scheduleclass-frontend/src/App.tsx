@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/auth/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import RecoverPage from "./pages/auth/RecoverPage";
 
 // Dashboard
 import DashboardPage from "./pages/dashboard/DashboardPage";
@@ -35,6 +36,7 @@ function App() {
         {/* Autenticación */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/recover" element={<RecoverPage />} />
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<DashboardPage />} />

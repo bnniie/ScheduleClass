@@ -1,19 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import styles from "../../styles/HomePage.module.css";
 
 const HomePage: React.FC = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Bienvenido a ScheduleClass</h1>
-      <p>
+    <div className={styles.homeContainer}>
+      <h1 className={styles.homeTitle}>Bienvenido a ScheduleClass</h1>
+      <p className={styles.homeSubtitle}>
         Aquí puedes gestionar docentes, aulas, cursos y horarios de manera sencilla.
       </p>
-      <div style={{ marginTop: "20px" }}>
+      <div className={styles.homeButtons}>
         <Link to="/login">
-          <button>Iniciar Sesión</button>
+          <button className={styles.homeButton}>Iniciar Sesión</button>
         </Link>
-        <Link to="/register" style={{ marginLeft: "10px" }}>
-          <button>Registrarse</button>
+        <Link to="/register">
+          <button className={styles.homeButton}>Registrarse</button>
         </Link>
       </div>
     </div>

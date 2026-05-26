@@ -1,0 +1,56 @@
+.homeContainer {
+  background-color: #FFFFFF;
+  height: 100vh;              
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;    
+  padding: 40px;
+  overflow-y: hidden;         
+  overflow-x: hidden;         
+}
+
+.homeContent {
+  background: #f9f9f9;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.homeTitle {
+  color: #004D40;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.homeSubtitle {
+  color: #004D40;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.homeButtons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;    
+}
+
+.homeButton {
+  background-color: #004D40;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.homeButton:hover {
+  background-color: #00695C;
+}

@@ -1,0 +1,118 @@
+.loginContainer {
+  background-color: #FFFFFF;
+  height: 100vh;              
+  display: flex;
+  align-items: center;
+  justify-content: center;    
+  overflow: hidden;
+}
+
+.loginContent {
+  background: #f9f9f9;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 350px;
+}
+
+.loginTitle {
+  color: #004D40;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginInput {
+  border: 1px solid #004D40;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #004D40;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.loginInput:focus {
+  outline: none;
+  border-color: #00695C;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.9rem;
+}
+
+.loginButton {
+  background-color: #004D40;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: #00695C;
+}
+
+.linkButton {
+  margin-top: 10px;
+  background-color: transparent;
+  color: #004D40;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.linkButton:hover {
+  color: #00695C;
+}
+
+.backButton {
+  margin-top: 15px;
+  background-color: transparent;
+  color: #004D40;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.backButton:hover {
+  color: #00695C;
+}
+
+.passwordGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: #004D40;
+  font-size: 1.2rem;
+}
