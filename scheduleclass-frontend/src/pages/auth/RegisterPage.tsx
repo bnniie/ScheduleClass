@@ -10,6 +10,7 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const validatePassword = (pwd: string) => {
@@ -35,10 +36,10 @@ const RegisterPage: React.FC = () => {
         password,
         role: "USER",
       });
-      alert("Usuario registrado");
+      setSuccessMessage("Usuario registrado");
       navigate("/login");
     } catch (error) {
-      alert("Error al registrar usuario");
+      setErrorMessage("Error al registrar usuario");
     }
   };
 
@@ -101,9 +102,8 @@ const RegisterPage: React.FC = () => {
             </small>
           </div>
 
-          {errorMessage && (
-            <p className={styles.errorMessage}>{errorMessage}</p>
-          )}
+          {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+          {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
 
           <button type="submit" className={styles.registerButton}>
             Registrar

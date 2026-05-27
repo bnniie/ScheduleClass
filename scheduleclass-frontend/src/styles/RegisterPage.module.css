@@ -93,6 +93,11 @@ html, body {
   font-size: 0.9rem;
 }
 
+.successMessage {
+  color: green;
+  font-size: 0.9rem;
+}
+
 .registerButton {
   background-color: #004D40;
   color: #FFFFFF;
