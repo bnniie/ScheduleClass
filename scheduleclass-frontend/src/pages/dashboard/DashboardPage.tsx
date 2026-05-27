@@ -9,7 +9,8 @@ import CreateAulaPage from "../aulas/CreateAulaPage";
 import ListAulasPage from "../aulas/ListAulasPage";
 import CreateCursoPage from "../cursos/CreateCursoPage";
 import ListCursosPage from "../cursos/ListCursosPage";
-import HorariosPage from "../horarios/HorariosPage";
+import CreateHorarioPage from "../horarios/CreateHorarioPage";
+import HorariosPage from "../horarios/ListHorariosPage";
 import PlanificadorPage from "../horarios/PlanificadorPage";
 
 const DashboardPage: React.FC = () => {
@@ -33,6 +34,7 @@ const DashboardPage: React.FC = () => {
           {selected === "aulas_listar" && <ListAulasPage />}
           {selected === "cursos_crear" && <CreateCursoPage />}
           {selected === "cursos_listar" && <ListCursosPage />}
+          {selected === "horarios_crear" && <CreateHorarioPage />}
           {selected === "horarios" && <HorariosPage />}
           {selected === "planificador" && <PlanificadorPage />}
         </main>

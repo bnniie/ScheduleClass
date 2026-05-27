@@ -23,8 +23,9 @@ import CreateCursoPage from "./pages/cursos/CreateCursoPage";
 import ListCursosPage from "./pages/cursos/ListCursosPage";
 
 // Páginas de horarios
-import HorariosPage from "./pages/horarios/HorariosPage";
+import HorariosPage from "./pages/horarios/ListHorariosPage";
 import PlanificadorPage from "./pages/horarios/PlanificadorPage";
+import CreateHorarioPage from "./pages/horarios/CreateHorarioPage";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/cursos/listar" element={<ListCursosPage />} />
 
         {/* Horarios */}
+        <Route path="/horarios" element={<CreateHorarioPage />} />
         <Route path="/horarios" element={<HorariosPage />} />
         <Route path="/planificador" element={<PlanificadorPage />} />
       </Routes>
