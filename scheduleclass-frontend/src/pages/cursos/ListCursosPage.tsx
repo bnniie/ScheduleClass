@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCursos, deleteCurso } from "../../services/cursoService";
+import styles from "../../styles/Dashboard.module.css";
 
 interface Curso {
   id: number;
@@ -22,15 +23,20 @@ const ListCursosPage: React.FC = () => {
   };
 
   const eliminarCurso = async (id: number) => {
-    await deleteCurso(id);
-    alert("Curso eliminado");
-    cargarCursos();
+    try {
+      await deleteCurso(id);
+      alert("Curso eliminado");
+      cargarCursos();
+    } catch (error) {
+      alert("Error al eliminar curso");
+      console.error(error);
+    }
   };
 
   return (
     <div>
       <h2>Listado de Cursos</h2>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th>Nombre</th>
@@ -41,14 +47,19 @@ const ListCursosPage: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {cursos.map(c => (
+          {cursos.map((c) => (
             <tr key={c.id}>
               <td>{c.nombre}</td>
               <td>{c.sesionesPorSemana}</td>
               <td>{c.capacidadMaxima}</td>
               <td>{c.capacidadMinima}</td>
               <td>
-                <button onClick={() => eliminarCurso(c.id)}>Eliminar</button>
+                <button
+                  onClick={() => eliminarCurso(c.id)}
+                  className={styles.buttonDanger}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
