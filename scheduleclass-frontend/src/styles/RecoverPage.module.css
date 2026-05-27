@@ -52,9 +52,9 @@
   font-size: 0.8rem;
   color: #555;
   margin-top: 4px;
-  text-align: left;   /* ✅ alineación a la izquierda */
-  width: 100%;        /* ✅ ocupa todo el ancho */
-  display: block;     /* ✅ se muestra en su propia línea */
+  text-align: left;
+  width: 100%;
+  display: block;
 }
 
 .errorMessage {

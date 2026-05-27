@@ -1,30 +1,80 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import styles from "../../styles/Sidebar.module.css";
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  selected: string;
+  setSelected: (value: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected }) => {
   const role = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
 
   return (
     <aside className={styles.sidebar}>
-      <ul>
+      <ul className={styles.menu}>
         {role === "ADMIN" || role === "ROLE_ADMIN" ? (
           <>
-            <li><Link to="/docentes/crear">Crear Docente</Link></li>
-            <li><Link to="/docentes/listar">Listar Docentes</Link></li>
-            <li><Link to="/aulas/crear">Crear Aula</Link></li>
-            <li><Link to="/aulas/listar">Listar Aulas</Link></li>
-            <li><Link to="/cursos/crear">Crear Curso</Link></li>
-            <li><Link to="/cursos/listar">Listar Cursos</Link></li>
-            <li><Link to="/horarios">Ver Horarios</Link></li>
-            <li><Link to="/planificador">Planificador</Link></li>
+            <li
+              onClick={() => setSelected("docentes_crear")}
+              className={selected === "docentes_crear" ? styles.active : ""}
+            >
+              Crear Docente
+            </li>
+            <li
+              onClick={() => setSelected("docentes_listar")}
+              className={selected === "docentes_listar" ? styles.active : ""}
+            >
+              Listar Docentes
+            </li>
+            <li
+              onClick={() => setSelected("aulas_crear")}
+              className={selected === "aulas_crear" ? styles.active : ""}
+            >
+              Crear Aula
+            </li>
+            <li
+              onClick={() => setSelected("aulas_listar")}
+              className={selected === "aulas_listar" ? styles.active : ""}
+            >
+              Listar Aulas
+            </li>
+            <li
+              onClick={() => setSelected("cursos_crear")}
+              className={selected === "cursos_crear" ? styles.active : ""}
+            >
+              Crear Curso
+            </li>
+            <li
+              onClick={() => setSelected("cursos_listar")}
+              className={selected === "cursos_listar" ? styles.active : ""}
+            >
+              Listar Cursos
+            </li>
+            <li
+              onClick={() => setSelected("horarios")}
+              className={selected === "horarios" ? styles.active : ""}
+            >
+              Ver Horarios
+            </li>
+            <li
+              onClick={() => setSelected("planificador")}
+              className={selected === "planificador" ? styles.active : ""}
+            >
+              Planificador
+            </li>
           </>
-        ) : (
-          <>
-            <li><Link to="/horarios">Ver Horarios</Link></li>
-          </>
-        )}
+        ) : null}
       </ul>
+
+      {/* Cerrar Sesión  */}
+      <div className={styles.logout} onClick={handleLogout}>
+        Cerrar Sesión
+      </div>
     </aside>
   );
 };
