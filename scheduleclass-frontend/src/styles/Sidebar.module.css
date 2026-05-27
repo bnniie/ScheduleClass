@@ -3,7 +3,7 @@
   background-color: #004D40;
   color: #ffffff;
   padding: 20px;
-  min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -43,7 +43,7 @@
   color: #f44336;
   cursor: pointer;
   transition: color 0.2s ease;
-  margin-top: 390px;
+  margin-top: 20px;
 }
 
 .logout:hover {

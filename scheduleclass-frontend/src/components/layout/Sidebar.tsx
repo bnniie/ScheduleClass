@@ -56,10 +56,16 @@ const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected }) => {
               Listar Cursos
             </li>
             <li
+              onClick={() => setSelected("horarios_crear")}
+              className={selected === "horarios_crear" ? styles.active : ""}
+            >
+              Crear Horario
+            </li>
+            <li
               onClick={() => setSelected("horarios")}
               className={selected === "horarios" ? styles.active : ""}
             >
-              Ver Horarios
+              Listar Horarios
             </li>
             <li
               onClick={() => setSelected("planificador")}

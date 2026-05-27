@@ -7,6 +7,7 @@ interface Aula {
   nombre: string;
   capacidad: number;
   computadores: boolean;
+  sillasMoviles: boolean;
 }
 
 const ListAulasPage: React.FC = () => {
@@ -28,7 +29,7 @@ const ListAulasPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={styles.main}>
       <h2>Listado de Aulas</h2>
       <table className={styles.table}>
         <thead>
@@ -36,6 +37,7 @@ const ListAulasPage: React.FC = () => {
             <th>Nombre</th>
             <th>Capacidad</th>
             <th>Computadores</th>
+            <th>Sillas Móviles</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -45,6 +47,7 @@ const ListAulasPage: React.FC = () => {
               <td>{a.nombre}</td>
               <td>{a.capacidad}</td>
               <td>{a.computadores ? "Sí" : "No"}</td>
+              <td>{a.sillasMoviles ? "Sí" : "No"}</td>
               <td>
                 <button
                   onClick={() => eliminarAula(a.id)}

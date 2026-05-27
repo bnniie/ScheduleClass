@@ -7,6 +7,7 @@ const AulaForm: React.FC = () => {
     nombre: "",
     capacidad: 0,
     computadores: false,
+    sillasMoviles: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,11 +24,12 @@ const AulaForm: React.FC = () => {
       nombre: form.nombre,
       capacidad: Number(form.capacidad),
       computadores: form.computadores,
+      sillasMoviles: form.sillasMoviles,
     };
     try {
       await axios.post("http://localhost:8080/api/aulas", payload);
       alert("Aula registrada exitosamente");
-      setForm({ nombre: "", capacidad: 0, computadores: false });
+      setForm({ nombre: "", capacidad: 0, computadores: false, sillasMoviles: false });
     } catch (error) {
       alert("Error al registrar aula");
     }
@@ -73,6 +75,19 @@ const AulaForm: React.FC = () => {
             onChange={handleChange}
           />
           Aula con computadores
+        </label>
+      </div>
+
+      {/* Sillas móviles */}
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            name="sillasMoviles"
+            checked={form.sillasMoviles}
+            onChange={handleChange}
+          />
+          Aula con sillas móviles
         </label>
       </div>
 

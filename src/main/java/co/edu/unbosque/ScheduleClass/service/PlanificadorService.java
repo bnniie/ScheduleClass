@@ -22,9 +22,9 @@ public class PlanificadorService {
     public void generarHorarios(List<Curso> cursos, List<Docente> docentes, List<Aula> aulas) {
         // Ordenar cursos por prioridad: obligatorios > capacidad > sesiones
         cursos.sort(Comparator
-            .comparing((Curso c) -> !c.getNombre().toLowerCase().contains("obligatorio")) // obligatorios primero
-            .thenComparing(Comparator.comparingInt(Curso::getCapacidadMaxima).reversed()) // más estudiantes primero
-            .thenComparing(Comparator.comparingInt(Curso::getSesionesPorSemana).reversed())); // más sesiones primero
+            .comparing((Curso c) -> !c.getNombre().toLowerCase().contains("obligatorio"))
+            .thenComparing(Comparator.comparingInt(Curso::getCapacidadMaxima).reversed())
+            .thenComparing(Comparator.comparingInt(Curso::getSesionesPorSemana).reversed()));
 
         for (Curso curso : cursos) {
             // Seleccionar docente con menor carga
@@ -34,12 +34,6 @@ public class PlanificadorService {
                     .count()))
                 .orElseThrow(() -> new IllegalArgumentException("No hay docente disponible"));
 
-            // Seleccionar aula más ajustada
-            Aula aula = aulas.stream()
-                .filter(a -> a.getCapacidad() >= curso.getCapacidadMinima())
-                .min(Comparator.comparingInt(a -> a.getCapacidad() - curso.getCapacidadMinima()))
-                .orElseThrow(() -> new IllegalArgumentException("No hay aula adecuada"));
-
             // Día inicial
             LocalDateTime inicio = LocalDateTime.of(2026, 5, 25, 8, 0);
             LocalDateTime fin = inicio.plusHours(2);
@@ -47,6 +41,8 @@ public class PlanificadorService {
             boolean choque;
             do {
                 choque = false;
+
+                // Validar choques de docente
                 for (Horario h : horarioRepository.findAll()) {
                     if (h.getDocente().getId().equals(docente.getId()) &&
                         inicio.isBefore(h.getFin()) &&
@@ -56,10 +52,19 @@ public class PlanificadorService {
                     }
                 }
 
+                // Validar franja prohibida (12:00–13:00)
+                if (inicio.getHour() == 12) {
+                    inicio = inicio.plusHours(1);
+                    fin = inicio.plusHours(2);
+                    choque = true;
+                }
+
+                // Si hay choque, mover a la siguiente franja
                 if (choque) {
                     inicio = inicio.plusHours(2);
                     fin = inicio.plusHours(2);
 
+                    // Si pasa de las 18:00, saltar al día siguiente
                     if (inicio.getHour() >= 18) {
                         inicio = inicio.plusDays(1).withHour(8).withMinute(0);
                         fin = inicio.plusHours(2);
@@ -67,14 +72,48 @@ public class PlanificadorService {
                 }
             } while (choque);
 
+            // Seleccionar aula libre y adecuada (sin lambdas para evitar error de final)
+            Aula aulaSeleccionada = null;
+            int mejorDiferencia = Integer.MAX_VALUE;
+
+            for (Aula a : aulas) {
+                if (a.getCapacidad() >= curso.getCapacidadMinima()) {
+                    boolean ocupada = false;
+                    for (Horario h : horarioRepository.findAll()) {
+                        if (h.getAula().getId().equals(a.getId()) &&
+                            inicio.isBefore(h.getFin()) &&
+                            fin.isAfter(h.getInicio())) {
+                            ocupada = true;
+                            break;
+                        }
+                    }
+                    if (!ocupada) {
+                        int diferencia = a.getCapacidad() - curso.getCapacidadMinima();
+                        if (diferencia < mejorDiferencia) {
+                            mejorDiferencia = diferencia;
+                            aulaSeleccionada = a;
+                        }
+                    }
+                }
+            }
+
+            if (aulaSeleccionada == null) {
+                throw new IllegalArgumentException("No hay aula adecuada");
+            }
+
             Horario horario = new Horario();
             horario.setDocente(docente);
             horario.setCurso(curso);
-            horario.setAula(aula);
+            horario.setAula(aulaSeleccionada);
             horario.setInicio(inicio);
             horario.setFin(fin);
 
             horarioService.crearHorario(horario);
+
+            System.out.println("Horario asignado: " + curso.getNombre() +
+                " con " + docente.getUsuario().getUsername() +
+                " en aula " + aulaSeleccionada.getNombre() +
+                " de " + inicio + " a " + fin);
         }
     }
 }
