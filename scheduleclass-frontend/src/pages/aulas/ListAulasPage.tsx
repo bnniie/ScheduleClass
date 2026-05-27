@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getAulas, deleteAula } from "../../services/aulaService";
+import styles from "../../styles/Dashboard.module.css";
 
 interface Aula {
   id: number;
   nombre: string;
   capacidad: number;
   computadores: boolean;
-  sillasMoviles: boolean;
 }
 
 const ListAulasPage: React.FC = () => {
@@ -30,25 +30,28 @@ const ListAulasPage: React.FC = () => {
   return (
     <div>
       <h2>Listado de Aulas</h2>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Capacidad</th>
             <th>Computadores</th>
-            <th>Sillas móviles</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {aulas.map(a => (
+          {aulas.map((a) => (
             <tr key={a.id}>
               <td>{a.nombre}</td>
               <td>{a.capacidad}</td>
               <td>{a.computadores ? "Sí" : "No"}</td>
-              <td>{a.sillasMoviles ? "Sí" : "No"}</td>
               <td>
-                <button onClick={() => eliminarAula(a.id)}>Eliminar</button>
+                <button
+                  onClick={() => eliminarAula(a.id)}
+                  className={styles.buttonDanger}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}

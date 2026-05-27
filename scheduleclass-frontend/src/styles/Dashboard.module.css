@@ -1,3 +1,9 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -25,15 +31,16 @@
   color: #333333;
 }
 
-/* Cajas de texto */
 .inputText {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  width: 60%;
+  max-width: 900px;
+  padding: 8px;
+  margin: 6px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.2s ease;
+  display: block;
 }
 
 .inputText:focus {
@@ -41,16 +48,17 @@
   outline: none;
 }
 
-/* Select */
 .selectBox {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  width: 60%;
+  max-width: 400px;
+  padding: 8px;
+  margin: 6px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
   background-color: #fff;
   transition: border-color 0.2s ease;
+  display: block;
 }
 
 .selectBox:focus {
@@ -68,7 +76,8 @@
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin-top: 10px;
+  margin-top: 14px;
+  display: block;
 }
 
 .button:hover {
@@ -85,13 +94,15 @@
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin-top: 10px;
+  margin-top: 14px;
+  display: block;
 }
 
 .buttonSecondary:hover {
   background-color: #80cbc4;
 }
 
+/* Tabla */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -115,6 +126,7 @@
   background-color: #f9f9f9;
 }
 
+/* Botón rojo eliminar */
 .buttonDanger {
   background-color: #e53935;
   color: white;
@@ -123,8 +135,21 @@
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  margin-top: 14px;
+  display: block;
 }
 
 .buttonDanger:hover {
   background-color: #c62828;
+}
+
+form div {
+  margin-bottom: 14px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #004D40;
 }
