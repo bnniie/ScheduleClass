@@ -1,25 +1,53 @@
 .sidebar {
-  width: 200px;
-  background-color: #34495e;
-  color: #ecf0f1;
-  height: 100vh;
+  width: 150px;
+  background-color: #004D40;
+  color: #ffffff;
   padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar li {
-  margin: 15px 0;
+  margin: 12px 0;
+  cursor: pointer;
 }
 
-.sidebar li a {
-  color: #ecf0f1;
+.sidebar a {
+  color: #ffffff;
   text-decoration: none;
+  font-size: 15px;
+  transition: color 0.2s ease, background 0.2s ease;
+  display: block;
+  padding: 8px;
+  border-radius: 4px;
 }
 
-.sidebar li a:hover {
-  color: #1abc9c;
+.sidebar a:hover {
+  color: #b2dfdb;
+}
+
+/* Estilo para la opción seleccionada */
+.active {
+  background: rgba(0, 255, 136, 0.1);
+}
+
+/* Cerrar sesión */
+.logout {
+  color: #f44336;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  margin-top: auto;
+}
+
+.logout:hover {
+  color: #ff7961;
 }
