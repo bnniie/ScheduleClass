@@ -3,7 +3,6 @@ import Navbar from "../../components/layout/Navbar";
 import Sidebar from "../../components/layout/Sidebar";
 import styles from "../../styles/Dashboard.module.css";
 
-// Importa las páginas correctas según tu estructura
 import CreateDocentePage from "../docentes/CreateDocentePage";
 import ListDocentesPage from "../docentes/ListDocentesPage";
 import CreateAulaPage from "../aulas/CreateAulaPage";

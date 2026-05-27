@@ -4,17 +4,17 @@ import { getUsers } from "../../services/userService";
 import styles from "../../styles/Dashboard.module.css";
 
 interface User {
-  idUser: number;
+  id: number;
   username: string;
-  email: string;
+  role: string;
 }
 
 const DocenteForm: React.FC = () => {
   const [form, setForm] = useState({
-    idUser: "",
-    contractType: "",
-    escalafon: "",
-    state: true,
+    usuarioId: 0,
+    dedicacion: "",
+    restricciones: "",
+    disponibilidad: ""
   });
 
   const [users, setUsers] = useState<User[]>([]);
@@ -23,6 +23,7 @@ const DocenteForm: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const res = await getUsers();
+        console.log("Usuarios cargados:", res.data);
         setUsers(res.data);
       } catch (error) {
         console.error("Error cargando usuarios:", error);
@@ -35,82 +36,87 @@ const DocenteForm: React.FC = () => {
     const { name, value } = e.target;
     setForm({
       ...form,
-      [name]: name === "idUser" ? Number(value) : value,
+      [name]: name === "usuarioId" ? Number(value) : value,
     });
+    console.log("Nuevo estado:", { ...form, [name]: name === "usuarioId" ? Number(value) : value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const payload = {
+      usuario: { id: form.usuarioId },
+      dedicacion: form.dedicacion,
+      restricciones: form.restricciones,
+      disponibilidad: form.disponibilidad,
+    };
+    console.log("Payload enviado:", payload);
     try {
-      await createDocente(form);
+      await createDocente(payload);
       alert("Docente registrado exitosamente");
-      setForm({ idUser: "", contractType: "", escalafon: "", state: true });
+      setForm({ usuarioId: 0, dedicacion: "", restricciones: "", disponibilidad: "" });
     } catch (error) {
+      console.error("Error al registrar docente:", error);
       alert("Error al registrar docente");
     }
   };
 
+  const selectedUser = users.find((u) => u.id === form.usuarioId);
+
   return (
     <form onSubmit={handleSubmit}>
-      {/* Selección de usuario */}
       <select
-        name="idUser"
-        value={form.idUser}
+        name="usuarioId"
+        value={form.usuarioId === 0 ? "" : form.usuarioId}
         onChange={handleChange}
         className={styles.selectBox}
         required
       >
         <option value="">Seleccione un usuario</option>
         {users.map((user) => (
-          <option key={user.idUser} value={user.idUser}>
-            {user.username} ({user.email})
+          <option key={user.id} value={user.id}>
+            {user.username} - {user.role}
           </option>
         ))}
       </select>
 
-      {/* Tipo de contrato */}
+      {selectedUser && (
+        <input
+          type="text"
+          value={selectedUser.username}
+          readOnly
+          className={styles.inputText}
+        />
+      )}
+
       <input
         type="text"
-        name="contractType"
-        placeholder="Tipo de contrato"
-        value={form.contractType}
+        name="dedicacion"
+        placeholder="Dedicación"
+        value={form.dedicacion}
         onChange={handleChange}
         className={styles.inputText}
         required
       />
 
-      {/* Escalafón */}
       <input
         type="text"
-        name="escalafon"
-        placeholder="Escalafón"
-        value={form.escalafon}
+        name="restricciones"
+        placeholder="Restricciones"
+        value={form.restricciones}
         onChange={handleChange}
         className={styles.inputText}
         required
       />
 
-      {/* Estado */}
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="state"
-            checked={form.state === true}
-            onChange={() => setForm({ ...form, state: true })}
-          />
-          Activo
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="state"
-            checked={form.state === false}
-            onChange={() => setForm({ ...form, state: false })}
-          />
-          Inactivo
-        </label>
-      </div>
+      <input
+        type="text"
+        name="disponibilidad"
+        placeholder="Disponibilidad"
+        value={form.disponibilidad}
+        onChange={handleChange}
+        className={styles.inputText}
+        required
+      />
 
       <button type="submit" className={styles.button}>
         Guardar

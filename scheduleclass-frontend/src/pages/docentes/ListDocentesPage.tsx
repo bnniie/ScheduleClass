@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getDocentes, deleteDocente } from "../../services/docenteService";
+import { getDocentes, deleteDocente, updateDocenteState } from "../../services/docenteService";
 import styles from "../../styles/Dashboard.module.css";
 
 interface Docente {
-  idDocente: number;
-  user: {
+  id: number;
+  usuario: {
     username: string;
     email: string;
   };
-  contractType: string;
-  escalafon: string;
+  dedicacion: string;
+  restricciones: string;
+  disponibilidad: string;
   state: boolean;
 }
 
@@ -33,11 +34,21 @@ const ListDocentesPage: React.FC = () => {
     if (window.confirm("¿Seguro que deseas eliminar este docente?")) {
       try {
         await deleteDocente(id);
-        alert("Docente eliminado ✅");
+        alert("Docente eliminado");
         cargarDocentes();
       } catch (error) {
         alert("Error al eliminar docente");
       }
+    }
+  };
+
+  const cambiarEstado = async (id: number, estadoActual: boolean) => {
+    try {
+      await updateDocenteState(id, !estadoActual);
+      alert(`Docente ${!estadoActual ? "activado" : "inactivado"}`);
+      cargarDocentes();
+    } catch (error) {
+      alert("Error al cambiar estado del docente");
     }
   };
 
@@ -48,25 +59,31 @@ const ListDocentesPage: React.FC = () => {
         <thead>
           <tr>
             <th>Usuario</th>
-            <th>Email</th>
-            <th>Contrato</th>
-            <th>Escalafón</th>
+            <th>Dedicación</th>
+            <th>Restricciones</th>
+            <th>Disponibilidad</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {docentes.map((d) => (
-            <tr key={d.idDocente}>
-              <td>{d.user?.username}</td>
-              <td>{d.user?.email}</td>
-              <td>{d.contractType}</td>
-              <td>{d.escalafon}</td>
+            <tr key={d.id}>
+              <td>{d.usuario?.username}</td>
+              <td>{d.dedicacion}</td>
+              <td>{d.restricciones}</td>
+              <td>{d.disponibilidad}</td>
               <td>{d.state ? "Activo" : "Inactivo"}</td>
               <td>
                 <button
                   className={styles.buttonSecondary}
-                  onClick={() => eliminarDocente(d.idDocente)}
+                  onClick={() => cambiarEstado(d.id, d.state)}
+                >
+                  {d.state ? "Inactivar" : "Activar"}
+                </button>
+                <button
+                  className={styles.buttonDanger}
+                  onClick={() => eliminarDocente(d.id)}
                 >
                   Eliminar
                 </button>
@@ -75,7 +92,7 @@ const ListDocentesPage: React.FC = () => {
           ))}
           {docentes.length === 0 && (
             <tr>
-              <td colSpan={6}>No hay docentes registrados</td>
+              <td colSpan={7}>No hay docentes registrados</td>
             </tr>
           )}
         </tbody>
