@@ -12,31 +12,71 @@ import ListCursosPage from "../cursos/ListCursosPage";
 import CreateHorarioPage from "../horarios/CreateHorarioPage";
 import HorariosPage from "../horarios/ListHorariosPage";
 import PlanificadorPage from "../horarios/PlanificadorPage";
+import CursosInscritosPage from "../cursos/CursosInscritosPage"; 
+import CursosAsignadosPage from "../cursos/CursosAsignadosPage";
+import RestriccionesPage from "../docentes/RestriccionesPage";
 
 const DashboardPage: React.FC = () => {
   const [selected, setSelected] = useState("home");
+
+  const storedRole = localStorage.getItem("role") || "";
+  const role =
+    storedRole === "ROLE_ADMIN" || storedRole === "ADMIN"
+      ? "ADMIN"
+      : storedRole === "ROLE_DOCENTE" || storedRole === "DOCENTE"
+      ? "DOCENTE"
+      : "USER";
 
   return (
     <div className={styles.dashboard}>
       <Navbar />
       <div className={styles.content}>
-        <Sidebar selected={selected} setSelected={setSelected} />
+        <Sidebar role={role} selected={selected} setSelected={setSelected} />
         <main className={styles.main}>
           {selected === "home" && (
             <>
-              <h2>Bienvenido al Dashboard</h2>
+              <h2>
+                {role === "ADMIN"
+                  ? "Bienvenido al Dashboard de Admin"
+                  : role === "DOCENTE"
+                  ? "Bienvenido al Dashboard de Docente"
+                  : "Bienvenido al Dashboard de Estudiante"}
+              </h2>
               <p>Selecciona una opción en el menú lateral.</p>
             </>
           )}
-          {selected === "docentes_crear" && <CreateDocentePage />}
-          {selected === "docentes_listar" && <ListDocentesPage />}
-          {selected === "aulas_crear" && <CreateAulaPage />}
-          {selected === "aulas_listar" && <ListAulasPage />}
-          {selected === "cursos_crear" && <CreateCursoPage />}
-          {selected === "cursos_listar" && <ListCursosPage />}
-          {selected === "horarios_crear" && <CreateHorarioPage />}
-          {selected === "horarios" && <HorariosPage />}
-          {selected === "planificador" && <PlanificadorPage />}
+
+          {/* ADMIN */}
+          {role === "ADMIN" && (
+            <>
+              {selected === "docentes_crear" && <CreateDocentePage />}
+              {selected === "docentes_listar" && <ListDocentesPage />}
+              {selected === "aulas_crear" && <CreateAulaPage />}
+              {selected === "aulas_listar" && <ListAulasPage />}
+              {selected === "cursos_crear" && <CreateCursoPage />}
+              {selected === "cursos_listar" && <ListCursosPage />}
+              {selected === "horarios_crear" && <CreateHorarioPage />}
+              {selected === "horarios" && <HorariosPage />}
+              {selected === "planificador" && <PlanificadorPage />}
+            </>
+          )}
+
+          {/* USER */}
+          {role === "USER" && (
+            <>
+              {selected === "cursos_inscritos" && <CursosInscritosPage />}
+              {selected === "horarios" && <HorariosPage />}
+            </>
+          )}
+
+          {/* DOCENTE */}
+          {role === "DOCENTE" && (
+            <>
+              {selected === "cursos_asignados" && <CursosAsignadosPage />}
+              {selected === "horarios" && <HorariosPage />}
+              {selected === "restricciones" && <RestriccionesPage />}
+            </>
+          )}
         </main>
       </div>
     </div>

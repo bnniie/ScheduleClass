@@ -41,7 +41,7 @@ const PlanificadorPage: React.FC = () => {
 
       alert("Horarios generados exitosamente");
     } catch (error: any) {
-      alert("Error al generar horarios ❌: " + error.response?.data?.message);
+      alert("Error al generar horarios: " + error.response?.data?.message);
     } finally {
       setLoading(false);
     }
