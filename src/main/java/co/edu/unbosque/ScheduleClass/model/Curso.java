@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "curso")
 public class Curso {
 
     @Id
@@ -16,6 +18,9 @@ public class Curso {
     private int sesionesPorSemana; 
     private int capacidadMaxima;
     private int capacidadMinima;
+    private int creditos;
+
+    private String codigo;
 
     // Getters y Setters
     public Long getId() { return id; }
@@ -32,4 +37,10 @@ public class Curso {
 
     public int getCapacidadMinima() { return capacidadMinima; }
     public void setCapacidadMinima(int capacidadMinima) { this.capacidadMinima = capacidadMinima; }
+
+    public int getCreditos() { return creditos; }
+    public void setCreditos(int creditos) { this.creditos = creditos; }
+
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 }

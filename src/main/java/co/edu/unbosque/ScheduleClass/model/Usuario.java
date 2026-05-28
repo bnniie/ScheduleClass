@@ -28,6 +28,14 @@ public class Usuario {
     )
     private List<Horario> horariosInscritos;
 
+    @ManyToMany
+    @JoinTable(
+        name = "usuario_cursos",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "curso_id")
+    )
+    private List<Curso> cursos;
+
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -43,4 +51,7 @@ public class Usuario {
 
     public List<Horario> getHorariosInscritos() { return horariosInscritos; }
     public void setHorariosInscritos(List<Horario> horariosInscritos) { this.horariosInscritos = horariosInscritos; }
+
+    public List<Curso> getCursos() { return cursos; }
+    public void setCursos(List<Curso> cursos) { this.cursos = cursos; }
 }

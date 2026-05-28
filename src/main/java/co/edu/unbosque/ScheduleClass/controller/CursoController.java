@@ -46,6 +46,11 @@ public class CursoController {
                 curso.setSesionesPorSemana(datos.getSesionesPorSemana());
                 curso.setCapacidadMaxima(datos.getCapacidadMaxima());
                 curso.setCapacidadMinima(datos.getCapacidadMinima());
+
+                // Nuevos campos
+                curso.setCodigo(datos.getCodigo());
+                curso.setCreditos(datos.getCreditos());
+
                 Curso actualizado = cursoRepository.save(curso);
                 return ResponseEntity.ok(actualizado);
             })

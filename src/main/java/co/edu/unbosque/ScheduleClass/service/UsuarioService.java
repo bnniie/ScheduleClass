@@ -54,11 +54,14 @@ public class UsuarioService {
             throw new IllegalArgumentException("El horario está lleno");
         }
 
+        // Validar choques de horarios por día y franja horaria
         for (Horario h : usuario.getHorariosInscritos()) {
-            boolean choque = horario.getInicio().isBefore(h.getFin()) &&
-                            horario.getFin().isAfter(h.getInicio());
-            if (choque) {
-                throw new IllegalArgumentException("El usuario ya tiene un horario en esa franja");
+            if (h.getDiaSemana().equalsIgnoreCase(horario.getDiaSemana())) {
+                boolean choque = !(horario.getHoraFin().compareTo(h.getHoraInicio()) <= 0 ||
+                                   horario.getHoraInicio().compareTo(h.getHoraFin()) >= 0);
+                if (choque) {
+                    throw new IllegalArgumentException("El usuario ya tiene un horario en esa franja");
+                }
             }
         }
 

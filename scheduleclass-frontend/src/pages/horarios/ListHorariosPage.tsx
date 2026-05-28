@@ -7,8 +7,9 @@ interface Horario {
   docente: { usuario: { username: string } };
   curso: { nombre: string };
   aula: { nombre: string };
-  inicio: string;
-  fin: string;
+  diaSemana: string;
+  horaInicio: string;
+  horaFin: string;
 }
 
 const ListHorariosPage: React.FC = () => {
@@ -23,7 +24,7 @@ const ListHorariosPage: React.FC = () => {
       const res = await getHorarios();
       setHorarios(res.data);
     } catch {
-      alert("Error al cargar horarios");
+      alert("Error al cargar horarios ❌");
     }
   };
 
@@ -38,7 +39,7 @@ const ListHorariosPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={styles.main}>
       <h2>Listado de Horarios</h2>
       <table className={styles.table}>
         <thead>
@@ -46,8 +47,9 @@ const ListHorariosPage: React.FC = () => {
             <th>Curso</th>
             <th>Docente</th>
             <th>Aula</th>
-            <th>Inicio</th>
-            <th>Fin</th>
+            <th>Día</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -57,8 +59,9 @@ const ListHorariosPage: React.FC = () => {
               <td>{h.curso?.nombre}</td>
               <td>{h.docente?.usuario?.username}</td>
               <td>{h.aula?.nombre}</td>
-              <td>{new Date(h.inicio).toLocaleString()}</td>
-              <td>{new Date(h.fin).toLocaleString()}</td>
+              <td>{h.diaSemana}</td>
+              <td>{h.horaInicio}</td>
+              <td>{h.horaFin}</td>
               <td>
                 <button
                   onClick={() => eliminarHorario(h.id)}
