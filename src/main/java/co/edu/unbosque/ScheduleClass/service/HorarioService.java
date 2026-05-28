@@ -42,6 +42,11 @@ public class HorarioService {
         Aula aula = aulaRepository.findById(horario.getAula().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Aula no encontrada"));
 
+        // Validar que el docente esté activo
+        if (!docente.isState()) {
+            throw new IllegalArgumentException("El docente está inactivo y no puede recibir horarios.");
+        }
+
         horario.setCurso(curso);
         horario.setDocente(docente);
         horario.setAula(aula);
@@ -63,7 +68,7 @@ public class HorarioService {
             throw new IllegalArgumentException("El aula no cumple con la capacidad mínima del curso.");
         }
 
-        // Validación 3: disponibilidad del docente (permitir desde las 08:00 en adelante)
+        // Validación 3: disponibilidad del docente (ejemplo: no antes de las 08:00)
         String disponibilidad = docente.getDisponibilidad();
         if (disponibilidad != null && horario.getInicio().toLocalTime().isBefore(LocalTime.of(8,0))) {
             throw new IllegalArgumentException("El docente no está disponible antes de las 08:00.");
@@ -80,8 +85,17 @@ public class HorarioService {
             throw new IllegalArgumentException("El horario debe estar entre 07:00 y 21:00.");
         }
 
-        System.out.println("Horario creado: " + curso.getNombre() + " - " + docente.getUsuario().getUsername()
-                + " en aula " + aula.getNombre() + " desde " + horario.getInicio() + " hasta " + horario.getFin());
+        // Inicializar cupos
+        horario.setCupoActual(0);
+        if (horario.getCupoMaximo() == 0 && aula != null) {
+            horario.setCupoMaximo(aula.getCapacidad());
+        }
+
+        System.out.println("Horario creado: " + curso.getNombre() + " - " 
+                + docente.getUsuario().getUsername()
+                + " en aula " + aula.getNombre() 
+                + " desde " + horario.getInicio() + " hasta " + horario.getFin()
+                + " | Cupo: " + horario.getCupoActual() + "/" + horario.getCupoMaximo());
 
         return horarioRepository.save(horario);
     }

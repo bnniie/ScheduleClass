@@ -1,5 +1,6 @@
 package co.edu.unbosque.ScheduleClass.model;
 
+import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +19,14 @@ public class Usuario {
 
     @Column(nullable = false)
     private String role; // ADMIN o USER
+    
+    @ManyToMany
+    @JoinTable(
+        name = "usuario_horarios",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "horario_id")
+    )
+    private List<Horario> horariosInscritos;
 
     // Getters y setters
     public Long getId() { return id; }
@@ -31,4 +40,7 @@ public class Usuario {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public List<Horario> getHorariosInscritos() { return horariosInscritos; }
+    public void setHorariosInscritos(List<Horario> horariosInscritos) { this.horariosInscritos = horariosInscritos; }
 }

@@ -20,12 +20,20 @@ const AulaForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validación de capacidad mínima y máxima
+    if (form.capacidad < 10 || form.capacidad > 40) {
+      alert("La capacidad del aula debe estar entre 10 y 40 estudiantes.");
+      return;
+    }
+
     const payload = {
       nombre: form.nombre,
       capacidad: Number(form.capacidad),
       computadores: form.computadores,
       sillasMoviles: form.sillasMoviles,
     };
+
     try {
       await axios.post("http://localhost:8080/api/aulas", payload);
       alert("Aula registrada exitosamente");
@@ -91,7 +99,7 @@ const AulaForm: React.FC = () => {
         </label>
       </div>
 
-      {/* Botón debajo */}
+      {/* Botón */}
       <div>
         <button type="submit" className={styles.button}>
           Guardar

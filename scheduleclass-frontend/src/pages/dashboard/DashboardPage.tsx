@@ -12,9 +12,9 @@ import ListCursosPage from "../cursos/ListCursosPage";
 import CreateHorarioPage from "../horarios/CreateHorarioPage";
 import HorariosPage from "../horarios/ListHorariosPage";
 import PlanificadorPage from "../horarios/PlanificadorPage";
-import CursosInscritosPage from "../cursos/CursosInscritosPage"; 
 import CursosAsignadosPage from "../cursos/CursosAsignadosPage";
 import RestriccionesPage from "../docentes/RestriccionesPage";
+import CreateHorariosUserPage from "../horarios/CreateHorariosUserPage";
 
 const DashboardPage: React.FC = () => {
   const [selected, setSelected] = useState("home");
@@ -64,7 +64,7 @@ const DashboardPage: React.FC = () => {
           {/* USER */}
           {role === "USER" && (
             <>
-              {selected === "cursos_inscritos" && <CursosInscritosPage />}
+            {selected === "horarios_crear_user" && (<CreateHorariosUserPage />)}
               {selected === "horarios" && <HorariosPage />}
             </>
           )}

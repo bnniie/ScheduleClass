@@ -28,11 +28,11 @@ const PlanificadorPage: React.FC = () => {
   const generarHorarios = async () => {
     setLoading(true);
     try {
-      // Lanza la planificación automática enviando cursos, docentes y aulas
+      // Enviar solo los IDs al backend
       await axios.post("http://localhost:8080/api/planificador", {
-        cursos,
-        docentes,
-        aulas
+        cursos: cursos.map(c => c.id),
+        docentes: docentes.map(d => d.id),
+        aulas: aulas.map(a => a.id)
       });
 
       // Consulta los horarios generados

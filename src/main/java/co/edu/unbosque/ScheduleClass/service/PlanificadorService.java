@@ -27,12 +27,13 @@ public class PlanificadorService {
             .thenComparing(Comparator.comparingInt(Curso::getSesionesPorSemana).reversed()));
 
         for (Curso curso : cursos) {
-            // Seleccionar docente con menor carga
+            // Seleccionar solo docentes activos
             Docente docente = docentes.stream()
+                .filter(Docente::isState) // solo docentes activos
                 .min(Comparator.comparingLong(d -> horarioRepository.findAll().stream()
                     .filter(h -> h.getDocente().getId().equals(d.getId()))
                     .count()))
-                .orElseThrow(() -> new IllegalArgumentException("No hay docente disponible"));
+                .orElseThrow(() -> new IllegalArgumentException("No hay docente activo disponible"));
 
             // Día inicial
             LocalDateTime inicio = LocalDateTime.of(2026, 5, 25, 8, 0);
@@ -64,7 +65,6 @@ public class PlanificadorService {
                     inicio = inicio.plusHours(2);
                     fin = inicio.plusHours(2);
 
-                    // Si pasa de las 18:00, saltar al día siguiente
                     if (inicio.getHour() >= 18) {
                         inicio = inicio.plusDays(1).withHour(8).withMinute(0);
                         fin = inicio.plusHours(2);
@@ -72,11 +72,13 @@ public class PlanificadorService {
                 }
             } while (choque);
 
-            // Seleccionar aula libre y adecuada (sin lambdas para evitar error de final)
+            // Seleccionar aula libre y adecuada (primera libre)
             Aula aulaSeleccionada = null;
-            int mejorDiferencia = Integer.MAX_VALUE;
-
             for (Aula a : aulas) {
+                System.out.println("Evaluando aula: " + a.getNombre() +
+                    " (id=" + a.getId() + ", capacidad=" + a.getCapacidad() +
+                    ", cursoMin=" + curso.getCapacidadMinima() + ")");
+
                 if (a.getCapacidad() >= curso.getCapacidadMinima()) {
                     boolean ocupada = false;
                     for (Horario h : horarioRepository.findAll()) {
@@ -88,11 +90,8 @@ public class PlanificadorService {
                         }
                     }
                     if (!ocupada) {
-                        int diferencia = a.getCapacidad() - curso.getCapacidadMinima();
-                        if (diferencia < mejorDiferencia) {
-                            mejorDiferencia = diferencia;
-                            aulaSeleccionada = a;
-                        }
+                        aulaSeleccionada = a; // tomar la primera libre
+                        break; // salir del bucle
                     }
                 }
             }
