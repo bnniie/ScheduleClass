@@ -155,3 +155,70 @@ form label {
   font-weight: 500;
   color: #004D40;
 }
+
+.dragContainer {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.list {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  width: 320px;
+  background-color: #fafafa;
+}
+
+.card {
+  margin: 10px 0;
+  padding: 12px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: grab;
+  transition: transform 0.1s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  background-color: #f0f0f0;
+}
+
+.cardInscrito {
+  background: #e0ffe0;
+  border-color: #8bc34a;
+}
+
+.courseList {
+  list-style: none;
+  padding: 0;
+}
+
+.courseItem {
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.courseItem:hover {
+  background-color: #f0f0f0;
+}
+
+.saveButton {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background-color: #45a049;
+}
+
