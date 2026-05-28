@@ -6,13 +6,13 @@ const HorarioForm: React.FC = () => {
   const [docentes, setDocentes] = useState<any[]>([]);
   const [cursos, setCursos] = useState<any[]>([]);
   const [aulas, setAulas] = useState<any[]>([]);
-  const [form, setForm] = useState({
+  const [cursoSeleccionado, setCursoSeleccionado] = useState<any | null>(null);
+  const [formBase, setFormBase] = useState({
     docenteId: "",
     cursoId: "",
-    aulaId: "",
-    inicio: "",
-    fin: ""
+    aulaId: ""
   });
+  const [horarios, setHorarios] = useState<any[]>([]);
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/docentes").then(res => setDocentes(res.data));
@@ -20,25 +20,47 @@ const HorarioForm: React.FC = () => {
     axios.get("http://localhost:8080/api/aulas").then(res => setAulas(res.data));
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Cuando cambia el curso, se generan los bloques de horarios
+  const handleCursoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cursoId = e.target.value;
+    setFormBase({ ...formBase, cursoId });
+    const curso = cursos.find(c => c.id === Number(cursoId));
+    setCursoSeleccionado(curso);
+
+    if (curso) {
+      const nuevosHorarios = Array.from({ length: curso.sesionesPorSemana }, () => ({
+        diaSemana: "",
+        horaInicio: "",
+        horaFin: ""
+      }));
+      setHorarios(nuevosHorarios);
+    }
+  };
+
+  const handleHorarioChange = (index: number, field: string, value: string) => {
+    const nuevos = [...horarios];
+    nuevos[index][field] = value;
+    setHorarios(nuevos);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
-      docente: { id: Number(form.docenteId) },
-      curso: { id: Number(form.cursoId) },
-      aula: { id: Number(form.aulaId) },
-      inicio: form.inicio,
-      fin: form.fin
-    };
+    const payload = horarios.map(h => ({
+      docente: { id: Number(formBase.docenteId) },
+      curso: { id: Number(formBase.cursoId) },
+      aula: { id: Number(formBase.aulaId) },
+      diaSemana: h.diaSemana,
+      horaInicio: h.horaInicio,
+      horaFin: h.horaFin
+    }));
+
     try {
-      await axios.post("http://localhost:8080/api/horarios", payload);
-      alert("Horario creado");
-      setForm({ docenteId: "", cursoId: "", aulaId: "", inicio: "", fin: "" });
+      await axios.post("http://localhost:8080/api/horarios/lote", payload);
+      alert("Horarios creados");
+      setFormBase({ docenteId: "", cursoId: "", aulaId: "" });
+      setHorarios([]);
     } catch (error: any) {
-      alert("Error al crear horario: " + error.response?.data?.message);
+      alert("Error al crear horarios: " + (error.response?.data?.message || "Error desconocido"));
     }
   };
 
@@ -47,24 +69,30 @@ const HorarioForm: React.FC = () => {
       <div>
         <label>Docente</label>
         <select
-            name="docenteId"
-            value={form.docenteId}
-            onChange={handleChange}
-            className={styles.selectBox}
-            required
+          name="docenteId"
+          value={formBase.docenteId}
+          onChange={(e) => setFormBase({ ...formBase, docenteId: e.target.value })}
+          className={styles.selectBox}
+          required
         >
-            <option value="">Seleccione docente</option>
-            {docentes.map(d => (
+          <option value="">Seleccione docente</option>
+          {docentes.map(d => (
             <option key={d.id} value={d.id}>
-                {d.usuario?.username}
+              {d.usuario?.username}
             </option>
-            ))}
+          ))}
         </select>
-        </div>
+      </div>
 
       <div>
         <label>Curso</label>
-        <select name="cursoId" value={form.cursoId} onChange={handleChange} className={styles.selectBox}>
+        <select
+          name="cursoId"
+          value={formBase.cursoId}
+          onChange={handleCursoChange}
+          className={styles.selectBox}
+          required
+        >
           <option value="">Seleccione curso</option>
           {cursos.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
         </select>
@@ -72,21 +100,55 @@ const HorarioForm: React.FC = () => {
 
       <div>
         <label>Aula</label>
-        <select name="aulaId" value={form.aulaId} onChange={handleChange} className={styles.selectBox}>
+        <select
+          name="aulaId"
+          value={formBase.aulaId}
+          onChange={(e) => setFormBase({ ...formBase, aulaId: e.target.value })}
+          className={styles.selectBox}
+          required
+        >
           <option value="">Seleccione aula</option>
           {aulas.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
         </select>
       </div>
 
-      <div>
-        <label>Inicio</label>
-        <input type="datetime-local" name="inicio" value={form.inicio} onChange={handleChange} className={styles.inputText} />
-      </div>
+      {horarios.map((h, i) => (
+        <div key={i} className={styles.sessionBlock}>
+          <h4>Sesión {i + 1}</h4>
+          <label>Día</label>
+          <select
+            value={h.diaSemana}
+            onChange={(e) => handleHorarioChange(i, "diaSemana", e.target.value)}
+            className={styles.selectBox}
+            required
+          >
+            <option value="">Seleccione día</option>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miércoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+          </select>
 
-      <div>
-        <label>Fin</label>
-        <input type="datetime-local" name="fin" value={form.fin} onChange={handleChange} className={styles.inputText} />
-      </div>
+          <label>Hora inicio</label>
+          <input
+            type="time"
+            value={h.horaInicio}
+            onChange={(e) => handleHorarioChange(i, "horaInicio", e.target.value)}
+            className={styles.inputText}
+            required
+          />
+
+          <label>Hora fin</label>
+          <input
+            type="time"
+            value={h.horaFin}
+            onChange={(e) => handleHorarioChange(i, "horaFin", e.target.value)}
+            className={styles.inputText}
+            required
+          />
+        </div>
+      ))}
 
       <div>
         <button type="submit" className={styles.button}>Guardar</button>

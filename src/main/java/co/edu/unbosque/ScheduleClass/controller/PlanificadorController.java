@@ -36,7 +36,7 @@ public class PlanificadorController {
     public ResponseEntity<String> generar(@RequestBody DatosPlanificadorDTO datos) {
         List<Curso> cursos = cursoRepository.findAllById(datos.getCursos());
         List<Docente> docentes = docenteRepository.findAllById(datos.getDocentes());
-        List<Aula> aulas = aulaRepository.findAll();
+        List<Aula> aulas = aulaRepository.findAllById(datos.getAulas());
 
         planificadorService.generarHorarios(cursos, docentes, aulas);
 

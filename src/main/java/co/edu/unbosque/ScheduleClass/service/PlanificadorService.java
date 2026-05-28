@@ -1,10 +1,7 @@
 package co.edu.unbosque.ScheduleClass.service;
 
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-
+import java.util.*;
 import co.edu.unbosque.ScheduleClass.model.*;
 import co.edu.unbosque.ScheduleClass.repository.HorarioRepository;
 
@@ -20,99 +17,102 @@ public class PlanificadorService {
     }
 
     public void generarHorarios(List<Curso> cursos, List<Docente> docentes, List<Aula> aulas) {
-        // Ordenar cursos por prioridad: obligatorios > capacidad > sesiones
+        // Ordenar cursos por prioridad
         cursos.sort(Comparator
             .comparing((Curso c) -> !c.getNombre().toLowerCase().contains("obligatorio"))
             .thenComparing(Comparator.comparingInt(Curso::getCapacidadMaxima).reversed())
             .thenComparing(Comparator.comparingInt(Curso::getSesionesPorSemana).reversed()));
 
+        // Días disponibles
+        String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes"};
+        // Franjas horarias disponibles
+        String[][] franjas = {
+            {"08:00", "10:00"},
+            {"10:00", "12:00"},
+            {"14:00", "16:00"},
+            {"16:00", "18:00"}
+        };
+
+        // Filtrar docentes activos
+        List<Docente> docentesActivos = docentes.stream()
+            .filter(Docente::isState)
+            .toList();
+
+        Map<Long, Docente> cursoDocenteMap = new HashMap<>();
+        int docenteIndex = 0;
+        int aulaIndex = 0;
+
         for (Curso curso : cursos) {
-            // Seleccionar solo docentes activos
-            Docente docente = docentes.stream()
-                .filter(Docente::isState) // solo docentes activos
-                .min(Comparator.comparingLong(d -> horarioRepository.findAll().stream()
-                    .filter(h -> h.getDocente().getId().equals(d.getId()))
-                    .count()))
-                .orElseThrow(() -> new IllegalArgumentException("No hay docente activo disponible"));
+            // Asignar docente fijo para el curso
+            Docente docenteAsignado = cursoDocenteMap.get(curso.getId());
+            if (docenteAsignado == null) {
+                docenteAsignado = docentesActivos.get(docenteIndex % docentesActivos.size());
+                cursoDocenteMap.put(curso.getId(), docenteAsignado);
+                docenteIndex++;
+            }
 
-            // Día inicial
-            LocalDateTime inicio = LocalDateTime.of(2026, 5, 25, 8, 0);
-            LocalDateTime fin = inicio.plusHours(2);
+            // Generar sesiones distribuidas en días distintos
+            int sesiones = curso.getSesionesPorSemana();
+            for (int i = 0; i < sesiones; i++) {
 
-            boolean choque;
-            do {
-                choque = false;
+                String diaSemana = dias[(i + docenteIndex) % dias.length];
+                String horaInicio = franjas[i % franjas.length][0];
+                String horaFin = franjas[i % franjas.length][1];
 
-                // Validar choques de docente
-                for (Horario h : horarioRepository.findAll()) {
-                    if (h.getDocente().getId().equals(docente.getId()) &&
-                        inicio.isBefore(h.getFin()) &&
-                        fin.isAfter(h.getInicio())) {
-                        choque = true;
+                // Buscar franja libre para ese docente
+                final Docente docenteFinal = docenteAsignado;
+                final String inicioFinal = horaInicio;
+                final String finFinal = horaFin;
+
+                boolean ocupado = horarioRepository.findAll().stream().anyMatch(h ->
+                    h.getDocente().getId().equals(docenteFinal.getId()) &&
+                    h.getDiaSemana().equalsIgnoreCase(diaSemana) &&
+                    !(finFinal.compareTo(h.getHoraInicio()) <= 0 || inicioFinal.compareTo(h.getHoraFin()) >= 0)
+                );
+                if (ocupado) {
+                    System.out.println("Docente ocupado en " + diaSemana + " " + inicioFinal + "-" + finFinal);
+                    continue;
+                }
+
+                // Seleccionar aula libre
+                Aula aulaSeleccionada = null;
+                for (int j = 0; j < aulas.size(); j++) {
+                    Aula a = aulas.get((aulaIndex + j) % aulas.size());
+                    boolean ocupada = horarioRepository.findAll().stream().anyMatch(h ->
+                        h.getAula().getId().equals(a.getId()) &&
+                        h.getDiaSemana().equalsIgnoreCase(diaSemana) &&
+                        !(finFinal.compareTo(h.getHoraInicio()) <= 0 || inicioFinal.compareTo(h.getHoraFin()) >= 0)
+                    );
+                    if (!ocupada && a.getCapacidad() >= curso.getCapacidadMinima()) {
+                        aulaSeleccionada = a;
+                        aulaIndex++;
                         break;
                     }
                 }
-
-                // Validar franja prohibida (12:00–13:00)
-                if (inicio.getHour() == 12) {
-                    inicio = inicio.plusHours(1);
-                    fin = inicio.plusHours(2);
-                    choque = true;
+                if (aulaSeleccionada == null) {
+                    System.out.println("No hay aula libre para " + curso.getNombre());
+                    continue;
                 }
 
-                // Si hay choque, mover a la siguiente franja
-                if (choque) {
-                    inicio = inicio.plusHours(2);
-                    fin = inicio.plusHours(2);
+                // Crear horario
+                Horario horario = new Horario();
+                horario.setDocente(docenteAsignado);
+                horario.setCurso(curso);
+                horario.setAula(aulaSeleccionada);
+                horario.setDiaSemana(diaSemana);
+                horario.setHoraInicio(horaInicio);
+                horario.setHoraFin(horaFin);
+                horario.setCupoMaximo(aulaSeleccionada.getCapacidad());
+                horario.setCupoActual(0);
 
-                    if (inicio.getHour() >= 18) {
-                        inicio = inicio.plusDays(1).withHour(8).withMinute(0);
-                        fin = inicio.plusHours(2);
-                    }
-                }
-            } while (choque);
+                horarioService.crearHorario(horario);
 
-            // Seleccionar aula libre y adecuada (primera libre)
-            Aula aulaSeleccionada = null;
-            for (Aula a : aulas) {
-                System.out.println("Evaluando aula: " + a.getNombre() +
-                    " (id=" + a.getId() + ", capacidad=" + a.getCapacidad() +
-                    ", cursoMin=" + curso.getCapacidadMinima() + ")");
-
-                if (a.getCapacidad() >= curso.getCapacidadMinima()) {
-                    boolean ocupada = false;
-                    for (Horario h : horarioRepository.findAll()) {
-                        if (h.getAula().getId().equals(a.getId()) &&
-                            inicio.isBefore(h.getFin()) &&
-                            fin.isAfter(h.getInicio())) {
-                            ocupada = true;
-                            break;
-                        }
-                    }
-                    if (!ocupada) {
-                        aulaSeleccionada = a; // tomar la primera libre
-                        break; // salir del bucle
-                    }
-                }
+                System.out.println("Horario asignado: " + curso.getNombre() +
+                    " con " + docenteAsignado.getUsuario().getUsername() +
+                    " en aula " + aulaSeleccionada.getNombre() +
+                    " | Día: " + diaSemana +
+                    " | Hora: " + horaInicio + " - " + horaFin);
             }
-
-            if (aulaSeleccionada == null) {
-                throw new IllegalArgumentException("No hay aula adecuada");
-            }
-
-            Horario horario = new Horario();
-            horario.setDocente(docente);
-            horario.setCurso(curso);
-            horario.setAula(aulaSeleccionada);
-            horario.setInicio(inicio);
-            horario.setFin(fin);
-
-            horarioService.crearHorario(horario);
-
-            System.out.println("Horario asignado: " + curso.getNombre() +
-                " con " + docente.getUsuario().getUsername() +
-                " en aula " + aulaSeleccionada.getNombre() +
-                " de " + inicio + " a " + fin);
         }
     }
 }

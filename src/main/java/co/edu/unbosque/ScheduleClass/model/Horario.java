@@ -1,6 +1,5 @@
 package co.edu.unbosque.ScheduleClass.model;
 
-import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,8 +29,10 @@ public class Horario {
     @JoinColumn(name = "aula_id")
     private Aula aula;
 
-    private LocalDateTime inicio;
-    private LocalDateTime fin;
+    // Esquema semanal
+    private String diaSemana; 
+    private String horaInicio;
+    private String horaFin;
 
     private int cupoMaximo;
     private int cupoActual;
@@ -49,11 +50,14 @@ public class Horario {
     public Aula getAula() { return aula; }
     public void setAula(Aula aula) { this.aula = aula; }
 
-    public LocalDateTime getInicio() { return inicio; }
-    public void setInicio(LocalDateTime inicio) { this.inicio = inicio; }
+    public String getDiaSemana() { return diaSemana; }
+    public void setDiaSemana(String diaSemana) { this.diaSemana = diaSemana; }
 
-    public LocalDateTime getFin() { return fin; }
-    public void setFin(LocalDateTime fin) { this.fin = fin; }
+    public String getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(String horaInicio) { this.horaInicio = horaInicio; }
+
+    public String getHoraFin() { return horaFin; }
+    public void setHoraFin(String horaFin) { this.horaFin = horaFin; }
 
     public int getCupoMaximo() { return cupoMaximo; }
     public void setCupoMaximo(int cupoMaximo) { this.cupoMaximo = cupoMaximo; }

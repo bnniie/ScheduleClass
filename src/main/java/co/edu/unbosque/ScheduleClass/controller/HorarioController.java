@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import co.edu.unbosque.ScheduleClass.dto.HorarioDisponibleDTO;
 import co.edu.unbosque.ScheduleClass.model.Horario;
@@ -29,10 +30,21 @@ public class HorarioController {
         return horarioService.listar();
     }
 
-    // Crear horario
+    // Crear un solo horario
     @PostMapping
     public Horario crear(@RequestBody Horario horario) {
         return horarioService.crearHorario(horario);
+    }
+
+    // Crear varios horarios en lote
+    @PostMapping("/lote")
+    public ResponseEntity<List<Horario>> crearHorarios(@RequestBody List<Horario> horarios) {
+        List<Horario> creados = new ArrayList<>();
+        for (Horario h : horarios) {
+            Horario creado = horarioService.crearHorario(h);
+            creados.add(creado);
+        }
+        return ResponseEntity.ok(creados);
     }
 
     // Obtener horario por ID
@@ -53,9 +65,11 @@ public class HorarioController {
         return ResponseEntity.noContent().build();
     }
 
+    // Listar horarios disponibles (con cupo libre)
     @GetMapping("/disponibles")
     public List<HorarioDisponibleDTO> listarDisponibles() {
         return horarioRepository.findAll().stream()
+            .filter(h -> h.getCupoActual() < h.getCupoMaximo())
             .map(h -> new HorarioDisponibleDTO(
                 h.getId(),
                 h.getCurso() != null ? h.getCurso().getNombre() : "Sin curso",
@@ -63,8 +77,9 @@ public class HorarioController {
                     ? h.getDocente().getUsuario().getUsername() 
                     : "Sin docente",
                 h.getAula() != null ? h.getAula().getNombre() : "Sin aula",
-                h.getInicio(),
-                h.getFin(),
+                h.getDiaSemana(),
+                h.getHoraInicio(),
+                h.getHoraFin(),
                 h.getCupoActual(),
                 h.getCupoMaximo()
             ))

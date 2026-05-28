@@ -8,8 +8,9 @@ interface HorarioDisponibleDTO {
   curso: string;
   docente: string;
   aula: string;
-  inicio?: string;
-  fin?: string;
+  diaSemana: string;
+  horaInicio: string;
+  horaFin: string;
   cupoActual: number;
   cupoMaximo: number;
   porcentajeOcupacion: number;
@@ -80,8 +81,8 @@ const CreateHorariosUserPage: React.FC = () => {
                       >
                         <strong>{h.curso}</strong> - {h.docente} <br />
                         Aula: {h.aula || "Sin aula"} <br />
-                        Inicio: {h.inicio ? new Date(h.inicio.replace(" ", "T")).toLocaleString() : "Sin fecha"} <br />
-                        Fin: {h.fin ? new Date(h.fin.replace(" ", "T")).toLocaleString() : "Sin fecha"} <br />
+                        Día: {h.diaSemana} <br />
+                        Hora: {h.horaInicio} - {h.horaFin} <br />
                         Cupo: {h.cupoActual}/{h.cupoMaximo} ({h.porcentajeOcupacion.toFixed(1)}%)
                       </div>
                     )}
@@ -101,8 +102,8 @@ const CreateHorariosUserPage: React.FC = () => {
                   <div key={h.id} className={`${styles.card} ${styles.cardInscrito}`}>
                     <strong>{h.curso}</strong> - {h.docente} <br />
                     Aula: {h.aula || "Sin aula"} <br />
-                    Inicio: {h.inicio ? new Date(h.inicio.replace(" ", "T")).toLocaleString() : "Sin fecha"} <br />
-                    Fin: {h.fin ? new Date(h.fin.replace(" ", "T")).toLocaleString() : "Sin fecha"} <br />
+                    Día: {h.diaSemana} <br />
+                    Hora: {h.horaInicio} - {h.horaFin} <br />
                     Cupo: {h.cupoActual}/{h.cupoMaximo} ({h.porcentajeOcupacion.toFixed(1)}%)
                   </div>
                 ))}

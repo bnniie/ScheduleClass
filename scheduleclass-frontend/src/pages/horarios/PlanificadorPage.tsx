@@ -7,8 +7,9 @@ interface Horario {
   docente: { usuario: { username: string } };
   curso: { nombre: string };
   aula: { nombre: string };
-  inicio: string;
-  fin: string;
+  diaSemana: string;
+  horaInicio: string;
+  horaFin: string;
 }
 
 const PlanificadorPage: React.FC = () => {
@@ -41,14 +42,14 @@ const PlanificadorPage: React.FC = () => {
 
       alert("Horarios generados exitosamente");
     } catch (error: any) {
-      alert("Error al generar horarios: " + error.response?.data?.message);
+      alert("Error al generar horarios: " + (error.response?.data?.message || "Error desconocido"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className={styles.main}>
       <h2>Planificación Automática</h2>
       <button onClick={generarHorarios} disabled={loading} className={styles.button}>
         {loading ? "Generando..." : "Generar Horarios"}
@@ -61,8 +62,9 @@ const PlanificadorPage: React.FC = () => {
             <th>Curso</th>
             <th>Docente</th>
             <th>Aula</th>
-            <th>Inicio</th>
-            <th>Fin</th>
+            <th>Día</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
           </tr>
         </thead>
         <tbody>
@@ -71,8 +73,9 @@ const PlanificadorPage: React.FC = () => {
               <td>{h.curso?.nombre}</td>
               <td>{h.docente?.usuario?.username}</td>
               <td>{h.aula?.nombre}</td>
-              <td>{new Date(h.inicio).toLocaleString()}</td>
-              <td>{new Date(h.fin).toLocaleString()}</td>
+              <td>{h.diaSemana}</td>
+              <td>{h.horaInicio}</td>
+              <td>{h.horaFin}</td>
             </tr>
           ))}
         </tbody>

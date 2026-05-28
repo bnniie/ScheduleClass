@@ -3,7 +3,6 @@ package co.edu.unbosque.ScheduleClass.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.time.LocalTime;
 
 import co.edu.unbosque.ScheduleClass.model.Horario;
 import co.edu.unbosque.ScheduleClass.model.Curso;
@@ -32,6 +31,9 @@ public class HorarioService {
         this.aulaRepository = aulaRepository;
     }
 
+    /**
+     * Crear un horario puntual (usado por el formulario).
+     */
     @Transactional
     public Horario crearHorario(Horario horario) {
         // Cargar entidades completas desde la BD
@@ -51,12 +53,13 @@ public class HorarioService {
         horario.setDocente(docente);
         horario.setAula(aula);
 
-        // Validación 1: evitar choques de horarios para el mismo docente
+        // Validación 1: evitar choques de horarios para el mismo docente en el mismo día
         List<Horario> horariosDocente = horarioRepository.findAll();
         for (Horario h : horariosDocente) {
-            if (h.getDocente().getId().equals(docente.getId())) {
-                boolean choque = horario.getInicio().isBefore(h.getFin()) &&
-                                 horario.getFin().isAfter(h.getInicio());
+            if (h.getDocente().getId().equals(docente.getId())
+                && h.getDiaSemana().equalsIgnoreCase(horario.getDiaSemana())) {
+                boolean choque = !(horario.getHoraFin().compareTo(h.getHoraInicio()) <= 0 ||
+                                   horario.getHoraInicio().compareTo(h.getHoraFin()) >= 0);
                 if (choque) {
                     throw new IllegalArgumentException("El docente ya tiene clase en ese horario.");
                 }
@@ -70,7 +73,7 @@ public class HorarioService {
 
         // Validación 3: disponibilidad del docente (ejemplo: no antes de las 08:00)
         String disponibilidad = docente.getDisponibilidad();
-        if (disponibilidad != null && horario.getInicio().toLocalTime().isBefore(LocalTime.of(8,0))) {
+        if (disponibilidad != null && horario.getHoraInicio().compareTo("08:00") < 0) {
             throw new IllegalArgumentException("El docente no está disponible antes de las 08:00.");
         }
 
@@ -81,7 +84,8 @@ public class HorarioService {
         }
 
         // Validación 5: franja horaria válida
-        if (horario.getInicio().getHour() < 7 || horario.getFin().getHour() > 21) {
+        if (Integer.parseInt(horario.getHoraInicio().substring(0,2)) < 7 ||
+            Integer.parseInt(horario.getHoraFin().substring(0,2)) > 21) {
             throw new IllegalArgumentException("El horario debe estar entre 07:00 y 21:00.");
         }
 
@@ -94,10 +98,43 @@ public class HorarioService {
         System.out.println("Horario creado: " + curso.getNombre() + " - " 
                 + docente.getUsuario().getUsername()
                 + " en aula " + aula.getNombre() 
-                + " desde " + horario.getInicio() + " hasta " + horario.getFin()
+                + " | Día: " + horario.getDiaSemana()
+                + " | Hora: " + horario.getHoraInicio() + " - " + horario.getHoraFin()
                 + " | Cupo: " + horario.getCupoActual() + "/" + horario.getCupoMaximo());
 
         return horarioRepository.save(horario);
+    }
+
+    /**
+     * Generar automáticamente varios horarios para un curso
+     * según sesionesPorSemana. Se usa en el planificador, no en el formulario.
+     */
+    @Transactional
+    public void generarHorariosPorCurso(Curso curso, Docente docente, Aula aula) {
+        // Días disponibles para asignar
+        String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes"};
+        int sesiones = curso.getSesionesPorSemana();
+
+        // Distribuir sesiones en días distintos
+        for (int i = 0; i < sesiones && i < dias.length; i++) {
+            Horario horario = new Horario();
+            horario.setCurso(curso);
+            horario.setDocente(docente);
+            horario.setAula(aula);
+            horario.setDiaSemana(dias[i]); // cada sesión en un día distinto
+            horario.setHoraInicio("08:00");
+            horario.setHoraFin("10:00");
+            horario.setCupoMaximo(aula.getCapacidad());
+            horario.setCupoActual(0);
+
+            horarioRepository.save(horario);
+
+            System.out.println("Horario generado automáticamente: " + curso.getNombre() +
+                " con " + docente.getUsuario().getUsername() +
+                " en aula " + aula.getNombre() +
+                " | Día: " + dias[i] +
+                " | Hora: 08:00 - 10:00");
+        }
     }
 
     public List<Horario> listar() {
