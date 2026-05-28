@@ -2,13 +2,12 @@ import React from "react";
 import styles from "../../styles/Sidebar.module.css";
 
 interface SidebarProps {
+  role: "ADMIN" | "USER" | "DOCENTE";
   selected: string;
   setSelected: (value: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected }) => {
-  const role = localStorage.getItem("role");
-
+const Sidebar: React.FC<SidebarProps> = ({ role, selected, setSelected }) => {
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = "/login";
@@ -17,7 +16,8 @@ const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected }) => {
   return (
     <aside className={styles.sidebar}>
       <ul className={styles.menu}>
-        {role === "ADMIN" || role === "ROLE_ADMIN" ? (
+        {/* Opciones ADMIN */}
+        {role === "ADMIN" && (
           <>
             <li
               onClick={() => setSelected("docentes_crear")}
@@ -74,10 +74,52 @@ const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected }) => {
               Planificador
             </li>
           </>
-        ) : null}
+        )}
+
+        {/* Opciones USER */}
+        {role === "USER" && (
+          <>
+            <li
+              onClick={() => setSelected("cursos_inscritos")}
+              className={selected === "cursos_inscritos" ? styles.active : ""}
+            >
+              Mis Cursos
+            </li>
+            <li
+              onClick={() => setSelected("horarios")}
+              className={selected === "horarios" ? styles.active : ""}
+            >
+              Mis Horarios
+            </li>
+          </>
+        )}
+
+        {/* Opciones DOCENTE */}
+        {role === "DOCENTE" && (
+          <>
+            <li
+              onClick={() => setSelected("cursos_asignados")}
+              className={selected === "cursos_asignados" ? styles.active : ""}
+            >
+              Mis Cursos Asignados
+            </li>
+            <li
+              onClick={() => setSelected("horarios")}
+              className={selected === "horarios" ? styles.active : ""}
+            >
+              Mis Horarios
+            </li>
+            <li
+              onClick={() => setSelected("restricciones")}
+              className={selected === "restricciones" ? styles.active : ""}
+            >
+              Mis Restricciones
+            </li>
+          </>
+        )}
       </ul>
 
-      {/* Cerrar Sesión  */}
+      {/* Cerrar Sesión */}
       <div className={styles.logout} onClick={handleLogout}>
         Cerrar Sesión
       </div>

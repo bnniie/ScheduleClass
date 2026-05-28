@@ -29,7 +29,7 @@ const ListAulasPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <h2>Listado de Aulas</h2>
       <table className={styles.table}>
         <thead>
