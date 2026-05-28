@@ -1,33 +1,24 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Páginas de autenticación
 import HomePage from "./pages/auth/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import RecoverPage from "./pages/auth/RecoverPage";
-
-// Dashboard
 import DashboardPage from "./pages/dashboard/DashboardPage";
-
-// Páginas de docentes
 import CreateDocentePage from "./pages/docentes/CreateDocentePage";
 import ListDocentesPage from "./pages/docentes/ListDocentesPage";
-
-// Páginas de aulas
 import CreateAulaPage from "./pages/aulas/CreateAulaPage";
 import ListAulasPage from "./pages/aulas/ListAulasPage";
-
-// Páginas de cursos
 import CreateCursoPage from "./pages/cursos/CreateCursoPage";
 import ListCursosPage from "./pages/cursos/ListCursosPage";
 import CursosAsignadosPage from "./pages/cursos/CursosAsignadosPage";
-
-// Páginas de horarios
 import ListHorariosPage from "./pages/horarios/ListHorariosPage";
 import PlanificadorPage from "./pages/horarios/PlanificadorPage";
 import CreateHorarioPage from "./pages/horarios/CreateHorarioPage";
 import CreateHorariosUserPage from "./pages/horarios/CreateHorariosUserPage";
+import SeleccionCursosPage from "./pages/cursos/SeleccionCursosPage";
+import CursosInscritosPage from "./pages/cursos/CursosInscritosPage";
 
 function App() {
   return (
@@ -55,6 +46,8 @@ function App() {
         {/* Cursos */}
         <Route path="/cursos/crear" element={<CreateCursoPage />} />
         <Route path="/cursos/listar" element={<ListCursosPage />} />
+        <Route path="/cursos/seleccion" element={<SeleccionCursosPage />} />
+        <Route path="/cursos/inscritos" element={<CursosInscritosPage />} />
         <Route path="/cursos/listar" element={<CursosAsignadosPage />} />
 
         {/* Horarios */}

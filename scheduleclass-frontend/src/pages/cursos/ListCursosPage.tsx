@@ -5,6 +5,8 @@ import styles from "../../styles/Dashboard.module.css";
 interface Curso {
   id: number;
   nombre: string;
+  codigo: string;
+  creditos: number;
   sesionesPorSemana: number;
   capacidadMaxima: number;
   capacidadMinima: number;
@@ -40,6 +42,8 @@ const ListCursosPage: React.FC = () => {
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>Código</th>
+            <th>Créditos</th>
             <th>Sesiones/semana</th>
             <th>Capacidad máxima</th>
             <th>Capacidad mínima</th>
@@ -50,6 +54,8 @@ const ListCursosPage: React.FC = () => {
           {cursos.map((c) => (
             <tr key={c.id}>
               <td>{c.nombre}</td>
+              <td>{c.codigo}</td>
+              <td>{c.creditos}</td>
               <td>{c.sesionesPorSemana}</td>
               <td>{c.capacidadMaxima}</td>
               <td>{c.capacidadMinima}</td>
