@@ -21,13 +21,13 @@ import ListAulasPage from "./pages/aulas/ListAulasPage";
 // Páginas de cursos
 import CreateCursoPage from "./pages/cursos/CreateCursoPage";
 import ListCursosPage from "./pages/cursos/ListCursosPage";
-import CursosInscritosPage from "./pages/cursos/CursosInscritosPage";
 import CursosAsignadosPage from "./pages/cursos/CursosAsignadosPage";
 
 // Páginas de horarios
 import ListHorariosPage from "./pages/horarios/ListHorariosPage";
 import PlanificadorPage from "./pages/horarios/PlanificadorPage";
 import CreateHorarioPage from "./pages/horarios/CreateHorarioPage";
+import CreateHorariosUserPage from "./pages/horarios/CreateHorariosUserPage";
 
 function App() {
   return (
@@ -55,13 +55,14 @@ function App() {
         {/* Cursos */}
         <Route path="/cursos/crear" element={<CreateCursoPage />} />
         <Route path="/cursos/listar" element={<ListCursosPage />} />
-        <Route path="/cursos/listar" element={<CursosInscritosPage />} />
         <Route path="/cursos/listar" element={<CursosAsignadosPage />} />
 
         {/* Horarios */}
-        <Route path="/horarios" element={<CreateHorarioPage />} />
-        <Route path="/horarios" element={<ListHorariosPage />} />
+        <Route path="/horarios/crear" element={<CreateHorarioPage />} />
+        <Route path="/horarios/listar" element={<ListHorariosPage />} />
         <Route path="/planificador" element={<PlanificadorPage />} />
+        <Route path="/horarios/crear/user"element={<CreateHorariosUserPage />} />
+
       </Routes>
     </Router>
   );

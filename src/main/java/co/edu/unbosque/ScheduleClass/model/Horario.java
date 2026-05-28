@@ -1,7 +1,6 @@
 package co.edu.unbosque.ScheduleClass.model;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +33,9 @@ public class Horario {
     private LocalDateTime inicio;
     private LocalDateTime fin;
 
+    private int cupoMaximo;
+    private int cupoActual;
+
     // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -52,4 +54,10 @@ public class Horario {
 
     public LocalDateTime getFin() { return fin; }
     public void setFin(LocalDateTime fin) { this.fin = fin; }
+
+    public int getCupoMaximo() { return cupoMaximo; }
+    public void setCupoMaximo(int cupoMaximo) { this.cupoMaximo = cupoMaximo; }
+
+    public int getCupoActual() { return cupoActual; }
+    public void setCupoActual(int cupoActual) { this.cupoActual = cupoActual; }
 }

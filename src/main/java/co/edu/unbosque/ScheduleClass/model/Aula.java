@@ -13,7 +13,13 @@ public class Aula {
     private Long id;
 
     private String nombre;
+
+    // Capacidad real del aula
     private int capacidad;
+
+    private int capacidadMaxima = 40;
+    private int capacidadMinima = 10;
+
     private boolean computadores;
     private boolean sillasMoviles;
 
@@ -26,6 +32,12 @@ public class Aula {
 
     public int getCapacidad() { return capacidad; }
     public void setCapacidad(int capacidad) { this.capacidad = capacidad; }
+
+    public int getCapacidadMaxima() { return capacidadMaxima; }
+    public void setCapacidadMaxima(int capacidadMaxima) { this.capacidadMaxima = capacidadMaxima; }
+
+    public int getCapacidadMinima() { return capacidadMinima; }
+    public void setCapacidadMinima(int capacidadMinima) { this.capacidadMinima = capacidadMinima; }
 
     public boolean isComputadores() { return computadores; }
     public void setComputadores(boolean computadores) { this.computadores = computadores; }
