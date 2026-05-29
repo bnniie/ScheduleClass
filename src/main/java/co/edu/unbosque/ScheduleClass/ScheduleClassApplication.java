@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Clase principal del sistema ScheduleClass.
+//              Contiene el método main que inicializa y ejecuta la aplicación Spring Boot.
+//              Sirve como punto de entrada para el framework, configurando automáticamente
+
 package co.edu.unbosque.ScheduleClass;
 
 import org.springframework.boot.SpringApplication;

@@ -1,3 +1,8 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Controlador REST para la gestión de cursos en el sistema ScheduleClass.
+//              Proporciona operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre la entidad Curso.
+
 package co.edu.unbosque.ScheduleClass.controller;
 
 import org.springframework.http.ResponseEntity;

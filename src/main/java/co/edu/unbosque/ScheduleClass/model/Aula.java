@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Entidad JPA que representa un aula dentro del sistema ScheduleClass.
+//              Contiene atributos relacionados con la capacidad y características físicas,
+//              y se utiliza para persistir información en la base de datos.
+
 package co.edu.unbosque.ScheduleClass.model;
 
 import jakarta.persistence.Entity;

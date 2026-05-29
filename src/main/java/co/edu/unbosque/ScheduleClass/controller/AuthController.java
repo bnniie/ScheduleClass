@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Controlador REST para la gestión de autenticación en el sistema ScheduleClass.
+
 package co.edu.unbosque.ScheduleClass.controller;
 
 import co.edu.unbosque.ScheduleClass.model.Usuario;

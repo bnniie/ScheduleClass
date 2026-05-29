@@ -1,3 +1,10 @@
+// Autor: Paula Guerrero
+// Fecha: 28/05/26
+// Descripción: Objeto de Transferencia de Datos (DTO) para representar
+//              la información básica de horarios disponibles para estudiantes.
+//              Se utiliza para enviar datos limpios y relevantes al frontend,
+//              evitando exponer toda la entidad Curso y sus relaciones internas.
+
 package co.edu.unbosque.ScheduleClass.dto;
 
 public class HorarioDisponibleDTO {
@@ -14,6 +21,7 @@ public class HorarioDisponibleDTO {
     private boolean computadores;
     private boolean sillasMoviles;
 
+    // Constructor
     public HorarioDisponibleDTO(Long id, String curso, String docente, String aula,
                                 String diaSemana, String horaInicio, String horaFin,
                                 int cupoActual, int cupoMaximo,

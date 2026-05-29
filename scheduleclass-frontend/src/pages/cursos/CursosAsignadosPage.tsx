@@ -2,22 +2,30 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";
 
-interface Curso {
+interface CursoHorarioDTO {
   id: number;
   nombre: string;
-  grupo: string;
-  horario: string;
+  codigo: string;
+  dias: string[];
+  horaInicio: string;
+  horaFin: string;
+  aulaNombre: string;
 }
 
 const CursosAsignadosPage: React.FC = () => {
-  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [cursos, setCursos] = useState<CursoHorarioDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/docente/cursos");
-        setCursos(res.data);
+        if (username) {
+          const res = await axios.get(
+            `http://localhost:8080/api/docentes/username/${username}/cursos-horarios`
+          );
+          setCursos(res.data);
+        }
       } catch (error) {
         console.error("Error al cargar cursos asignados:", error);
       } finally {
@@ -26,7 +34,7 @@ const CursosAsignadosPage: React.FC = () => {
     };
 
     fetchCursos();
-  }, []);
+  }, [username]);
 
   if (loading) {
     return <p>Cargando cursos asignados...</p>;
@@ -34,7 +42,7 @@ const CursosAsignadosPage: React.FC = () => {
 
   return (
     <div>
-      <h2>Mis Cursos Asignados</h2>
+      <h2>Cursos Asignados</h2>
       {cursos.length === 0 ? (
         <p>No tienes cursos asignados actualmente.</p>
       ) : (
@@ -42,16 +50,22 @@ const CursosAsignadosPage: React.FC = () => {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Grupo</th>
-              <th>Horario</th>
+              <th>Código</th>
+              <th>Días</th>
+              <th>Hora Inicio</th>
+              <th>Hora Fin</th>
+              <th>Aula</th>
             </tr>
           </thead>
           <tbody>
             {cursos.map((curso) => (
               <tr key={curso.id}>
                 <td>{curso.nombre}</td>
-                <td>{curso.grupo}</td>
-                <td>{curso.horario}</td>
+                <td>{curso.codigo}</td>
+                <td>{curso.dias.join(", ")}</td>
+                <td>{curso.horaInicio}</td>
+                <td>{curso.horaFin}</td>
+                <td>{curso.aulaNombre}</td>
               </tr>
             ))}
           </tbody>

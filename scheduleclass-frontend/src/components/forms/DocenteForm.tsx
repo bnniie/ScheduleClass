@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createDocente } from "../../services/docenteService";
-import { getUsers } from "../../services/userService";
+import { getUsers, User } from "../../services/userService";
 import styles from "../../styles/Dashboard.module.css";
-
-interface User {
-  id: number;
-  username: string;
-  role: string;
-}
 
 const DocenteForm: React.FC = () => {
   const [form, setForm] = useState({
@@ -22,11 +16,12 @@ const DocenteForm: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await getUsers();
-        console.log("Usuarios cargados:", res.data);
-        setUsers(res.data);
+        const data = await getUsers(); //
+        console.log("Usuarios cargados:", data);
+        setUsers(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error cargando usuarios:", error);
+        setUsers([]);
       }
     };
     fetchUsers();
@@ -38,7 +33,6 @@ const DocenteForm: React.FC = () => {
       ...form,
       [name]: name === "usuarioId" ? Number(value) : value,
     });
-    console.log("Nuevo estado:", { ...form, [name]: name === "usuarioId" ? Number(value) : value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,7 +43,6 @@ const DocenteForm: React.FC = () => {
       restricciones: form.restricciones,
       disponibilidad: form.disponibilidad,
     };
-    console.log("Payload enviado:", payload);
     try {
       await createDocente(payload);
       alert("Docente registrado exitosamente");
@@ -60,7 +53,7 @@ const DocenteForm: React.FC = () => {
     }
   };
 
-  const selectedUser = users.find((u) => u.id === form.usuarioId);
+  const selectedUser = users.find((u) => u.id === form.usuarioId) || null;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -72,11 +65,15 @@ const DocenteForm: React.FC = () => {
         required
       >
         <option value="">Seleccione un usuario</option>
-        {users.map((user) => (
-          <option key={user.id} value={user.id}>
-            {user.username} - {user.role}
-          </option>
-        ))}
+        {users.length > 0 ? (
+          users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.username} - {user.role}
+            </option>
+          ))
+        ) : (
+          <option disabled>No hay usuarios disponibles</option>
+        )}
       </select>
 
       {selectedUser && (

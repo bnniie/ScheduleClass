@@ -20,6 +20,7 @@ import CreateHorariosUserPage from "./pages/horarios/CreateHorariosUserPage";
 import SeleccionCursosPage from "./pages/cursos/SeleccionCursosPage";
 import CursosInscritosPage from "./pages/cursos/CursosInscritosPage";
 import UserCalendarPage from "./pages/horarios/UserCalendarPage";
+import DocenteCalendarPage from "./pages/docentes/DocenteCalendarPage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         {/* Docentes */}
         <Route path="/docentes/crear" element={<CreateDocentePage />} />
         <Route path="/docentes/listar" element={<ListDocentesPage />} />
+        <Route path="/docentes/calendar" element={<DocenteCalendarPage />} />
 
         {/* Aulas */}
         <Route path="/aulas/crear" element={<CreateAulaPage />} />
@@ -49,7 +51,7 @@ function App() {
         <Route path="/cursos/listar" element={<ListCursosPage />} />
         <Route path="/cursos/seleccion" element={<SeleccionCursosPage />} />
         <Route path="/cursos/inscritos" element={<CursosInscritosPage />} />
-        <Route path="/cursos/listar" element={<CursosAsignadosPage />} />
+        <Route path="/cursos/listar/docente" element={<CursosAsignadosPage />} />
 
         {/* Horarios */}
         <Route path="/horarios/crear" element={<CreateHorarioPage />} />
