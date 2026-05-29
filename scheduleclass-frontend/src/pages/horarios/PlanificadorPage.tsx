@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 27/05/26
+// Descripción: Página React para la creación automatizada de horarios el sistema ScheduleClass.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";

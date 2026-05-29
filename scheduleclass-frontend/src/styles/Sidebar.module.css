@@ -1,3 +1,9 @@
+/* Autor: Paula Guerrero
+   Fecha: 26/05/26
+   Descripción: Hoja de estilos para el Sidebar de ScheduleClass.
+                Define la estructura visual, tipografía, colores y estilos.
+*/
+
 .sidebar {
   width: 155px;
   background-color: #004D40;

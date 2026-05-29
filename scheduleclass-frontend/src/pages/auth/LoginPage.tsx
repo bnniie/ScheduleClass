@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Página React para el inicio de sesión en el sistema ScheduleClass.
+
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

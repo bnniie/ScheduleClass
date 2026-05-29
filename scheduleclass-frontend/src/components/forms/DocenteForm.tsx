@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Componente React para el registro de docentes en el sistema ScheduleClass.
+//              Permite crear un docente basandose en un usuario ya creado.
+//              validando la disponibilidad antes de enviar los datos al backend.
+
 import React, { useEffect, useState } from "react";
 import { createDocente } from "../../services/docenteService";
 import { getUsers, User } from "../../services/userService";

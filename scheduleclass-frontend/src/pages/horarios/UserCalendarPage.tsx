@@ -1,3 +1,8 @@
+// Autor: Paula Guerrero
+// Fecha: 28/05/26
+// Descripción: Página React para que el Estudiante pueda visualizar sus horarios el sistema ScheduleClass.
+//              Implementación de un calendario para dar una mejor experiencia al usuario.
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Calendar, momentLocalizer } from "react-big-calendar";

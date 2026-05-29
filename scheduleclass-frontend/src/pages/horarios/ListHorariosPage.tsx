@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 27/05/26
+// Descripción: Página React para listar los horarios creados en el sistema ScheduleClass.
+
 import React, { useEffect, useState } from "react";
 import { getHorarios, deleteHorario } from "../../services/horarioService";
 import styles from "../../styles/Dashboard.module.css";

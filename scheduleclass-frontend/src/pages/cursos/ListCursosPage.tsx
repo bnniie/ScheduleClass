@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 27/05/26
+// Descripción: Página React para listar los cursos creados en el sistema ScheduleClass.
+
 import React, { useEffect, useState } from "react";
 import { getCursos, deleteCurso } from "../../services/cursoService";
 import styles from "../../styles/Dashboard.module.css";

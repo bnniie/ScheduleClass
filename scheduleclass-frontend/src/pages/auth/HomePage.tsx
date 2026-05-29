@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Página React del index en sistema ScheduleClass.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/HomePage.module.css";

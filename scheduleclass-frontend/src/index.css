@@ -1,3 +1,11 @@
+/* Autor: Paula Guerrero
+   Fecha: 25/05/26
+   Descripción: Hoja de estilos global para la aplicación ScheduleClass.
+                Define la tipografía base y estilos generales aplicados
+                al body y al código fuente, asegurando consistencia visual
+                en toda la aplicación.
+*/
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

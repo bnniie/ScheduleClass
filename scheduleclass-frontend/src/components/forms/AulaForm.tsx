@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 26/05/26
+// Descripción: Componente React para el registro de aulas en el sistema ScheduleClass.
+//              Permite crear un aula con nombre, capacidad y características físicas,
+//              validando la capacidad mínima y máxima antes de enviar los datos al backend.
+
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";
