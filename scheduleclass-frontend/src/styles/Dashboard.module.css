@@ -222,3 +222,45 @@ form label {
   background-color: #45a049;
 }
 
+.headerWithButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionsInline {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botón aceptar */
+.acceptButton {
+  background-color: #004D40;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.acceptButton:hover {
+  background-color: #00695c;
+}
+
+/* Botón cancelar */
+.cancelButton {
+  background-color: #e53935;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #c62828;
+}

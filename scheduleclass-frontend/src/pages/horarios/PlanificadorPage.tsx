@@ -49,7 +49,7 @@ const PlanificadorPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <h2>Planificación Automática</h2>
       <button onClick={generarHorarios} disabled={loading} className={styles.button}>
         {loading ? "Generando..." : "Generar Horarios"}

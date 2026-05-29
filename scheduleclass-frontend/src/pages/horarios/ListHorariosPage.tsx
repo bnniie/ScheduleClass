@@ -24,7 +24,7 @@ const ListHorariosPage: React.FC = () => {
       const res = await getHorarios();
       setHorarios(res.data);
     } catch {
-      alert("Error al cargar horarios ❌");
+      alert("Error al cargar horarios");
     }
   };
 
@@ -39,7 +39,7 @@ const ListHorariosPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <h2>Listado de Horarios</h2>
       <table className={styles.table}>
         <thead>

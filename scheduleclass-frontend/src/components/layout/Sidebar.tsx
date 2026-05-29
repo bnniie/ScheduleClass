@@ -97,7 +97,14 @@ const Sidebar: React.FC<SidebarProps> = ({ role, selected, setSelected }) => {
               onClick={() => setSelected("horarios_crear_user")}
               className={selected === "horarios_crear_user" ? styles.active : ""}
             >
-              Crear horario
+              Crear Horario
+            </li>
+
+            <li
+              onClick={() => setSelected("user_calendar")}
+              className={selected === "user_calendar" ? styles.active : ""}
+            >
+              Mi Horario
             </li>
           </>
         )}

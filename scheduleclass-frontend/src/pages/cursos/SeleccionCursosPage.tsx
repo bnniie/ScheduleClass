@@ -45,7 +45,7 @@ const SeleccionCursosPage: React.FC = () => {
 
   return (
     <div>
-      <h2>Seleccionar Cursos</h2>
+      <h2>Inscribir Cursos</h2>
       <ul className={styles.courseList}>
         {cursos.map(c => (
           <li key={c.id} className={styles.courseItem}>

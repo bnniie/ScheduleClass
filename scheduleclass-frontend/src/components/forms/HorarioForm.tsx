@@ -6,7 +6,6 @@ const HorarioForm: React.FC = () => {
   const [docentes, setDocentes] = useState<any[]>([]);
   const [cursos, setCursos] = useState<any[]>([]);
   const [aulas, setAulas] = useState<any[]>([]);
-  const [cursoSeleccionado, setCursoSeleccionado] = useState<any | null>(null);
   const [formBase, setFormBase] = useState({
     docenteId: "",
     cursoId: "",
@@ -25,7 +24,6 @@ const HorarioForm: React.FC = () => {
     const cursoId = e.target.value;
     setFormBase({ ...formBase, cursoId });
     const curso = cursos.find(c => c.id === Number(cursoId));
-    setCursoSeleccionado(curso);
 
     if (curso) {
       const nuevosHorarios = Array.from({ length: curso.sesionesPorSemana }, () => ({
@@ -34,6 +32,8 @@ const HorarioForm: React.FC = () => {
         horaFin: ""
       }));
       setHorarios(nuevosHorarios);
+    } else {
+      setHorarios([]); // si no hay curso seleccionado, limpiar horarios
     }
   };
 

@@ -17,6 +17,7 @@ import RestriccionesPage from "../docentes/RestriccionesPage";
 import CreateHorariosUserPage from "../horarios/CreateHorariosUserPage";
 import SeleccionCursosPage from "../cursos/SeleccionCursosPage";
 import CursosInscritosPage from "../cursos/CursosInscritosPage";
+import UserCalendarPage from "../horarios/UserCalendarPage";
 
 const DashboardPage: React.FC = () => {
   const [selected, setSelected] = useState("home");
@@ -69,6 +70,7 @@ const DashboardPage: React.FC = () => {
             {selected === "seleccion_cursos" && <SeleccionCursosPage />}
             {selected === "cursos_inscritos" && <CursosInscritosPage />}
             {selected === "horarios_crear_user" && (<CreateHorariosUserPage />)}
+            {selected === "user_calendar" && <UserCalendarPage />}
             </>
           )}
 
