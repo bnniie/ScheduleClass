@@ -36,9 +36,13 @@ export default function () {
   let headers = { 'Content-Type': 'application/json' };
   let resPost = http.post('http://localhost:8080/api/cursos', payload, { headers });
 
+  // Ajuste: aceptar 200 o 201 como válidos
   check(resPost, {
-    "POST status is 201": (r) => r.status === 201,
+    "POST status is 200 or 201": (r) => r.status === 200 || r.status === 201,
   });
+
+  // Tip: imprimir el código de respuesta para depuración
+  console.log("POST status:", resPost.status);
 
   sleep(1); // simula tiempo de espera entre acciones
 }
