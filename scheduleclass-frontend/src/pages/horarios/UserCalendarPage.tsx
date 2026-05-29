@@ -3,7 +3,6 @@ import axios from "axios";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import styles from "../../styles/Dashboard.module.css";
 
 interface HorarioDisponibleDTO {
   id: number;
@@ -33,6 +32,7 @@ const UserCalendarPage: React.FC = () => {
         .then(res => {
           const horarios: HorarioDisponibleDTO[] = res.data;
 
+          // Solo de lunes a viernes
           const diasSemana: Record<string, number> = {
             "Lunes": 1,
             "Martes": 2,
@@ -42,7 +42,7 @@ const UserCalendarPage: React.FC = () => {
           };
 
           const eventosConvertidos = horarios
-            .filter(h => diasSemana[h.diaSemana])
+            .filter(h => diasSemana[h.diaSemana]) // descarta sábado y domingo
             .map(h => {
               const start = moment().day(diasSemana[h.diaSemana]).set({
                 hour: parseInt(h.horaInicio.split(":")[0]),
@@ -55,8 +55,8 @@ const UserCalendarPage: React.FC = () => {
               }).toDate();
 
               const caracteristicas: string[] = [];
-              if (h.computadores) caracteristicas.push("Computadores");
-              if (h.sillasMoviles) caracteristicas.push("Sillas móviles");
+              if (h.computadores) caracteristicas.push("Con computadores");
+              if (h.sillasMoviles) caracteristicas.push("Con sillas móviles");
 
               return {
                 id: h.id,
@@ -109,7 +109,7 @@ const UserCalendarPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <h2>Horario</h2>
       <Calendar
         localizer={localizer}
@@ -117,8 +117,8 @@ const UserCalendarPage: React.FC = () => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600 }}
-        defaultView="week"
-        views={["week", "day", "month"]}
+        defaultView="work_week" 
+        views={["work_week", "day", "month"]}
         min={new Date(1970, 1, 1, 8, 0)}
         max={new Date(1970, 1, 1, 22, 0)}
         eventPropGetter={eventStyleGetter}
@@ -132,6 +132,7 @@ const UserCalendarPage: React.FC = () => {
           next: "Siguiente",
           month: "Mes",
           week: "Semana",
+          work_week: "Semana",
           day: "Día",
           agenda: "Agenda",
           date: "Fecha",

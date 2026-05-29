@@ -13,7 +13,7 @@ interface HorarioDisponibleDTO {
   horaFin: string;
   cupoActual: number;
   cupoMaximo: number;
-  porcentajeOcupacion: number;
+  porcentajeOcupacion?: number;
 }
 
 const CreateHorariosUserPage: React.FC = () => {
@@ -41,7 +41,6 @@ const CreateHorariosUserPage: React.FC = () => {
     const { source, destination } = result;
     if (!destination) return;
 
-    // Disponibles =  Inscritos
     if (source.droppableId === "disponibles" && destination.droppableId === "inscritos") {
       const horario = disponibles[source.index];
 
@@ -59,10 +58,8 @@ const CreateHorariosUserPage: React.FC = () => {
       setDisponibles(disponibles.filter((_, i) => i !== source.index));
     }
 
-    // Inscritos = Disponibles
     if (source.droppableId === "inscritos" && destination.droppableId === "disponibles") {
       const horario = inscritos[source.index];
-
       setDisponibles([...disponibles, horario]);
       setInscritos(inscritos.filter((_, i) => i !== source.index));
     }
@@ -84,6 +81,7 @@ const CreateHorariosUserPage: React.FC = () => {
       setInscritos(inscritosRes.data);
       setOriginalInscritos(inscritosRes.data);
 
+      // Refrescar disponibles filtrados por usuario
       const disponiblesRes = await axios.get(`http://localhost:8080/api/users/username/${username}/horarios/disponibles`);
       setDisponibles(disponiblesRes.data);
 
@@ -93,7 +91,6 @@ const CreateHorariosUserPage: React.FC = () => {
     }
   };
 
-  // Cancelar: eliminar de BD los horarios inscritos
   const handleCancel = async () => {
     try {
       for (const h of originalInscritos) {
@@ -103,6 +100,7 @@ const CreateHorariosUserPage: React.FC = () => {
       setOriginalInscritos([]);
       alert("Horarios cancelados");
 
+      // Refrescar disponibles filtrados por usuario
       const disponiblesRes = await axios.get(`http://localhost:8080/api/users/username/${username}/horarios/disponibles`);
       setDisponibles(disponiblesRes.data);
 
@@ -111,6 +109,20 @@ const CreateHorariosUserPage: React.FC = () => {
       alert("Error al cancelar horarios: " + msg);
     }
   };
+
+  const renderCard = (h: HorarioDisponibleDTO, extraClass = "") => (
+    <div className={`${styles.card} ${extraClass}`}>
+      <strong>{h.curso}</strong> - {h.docente} <br />
+      Aula: {h.aula} <br />
+      Día: {h.diaSemana} <br />
+      Hora: {h.horaInicio} - {h.horaFin} <br />
+      Cupo: {h.cupoActual}/{h.cupoMaximo} (
+        {typeof h.porcentajeOcupacion === "number"
+          ? h.porcentajeOcupacion.toFixed(1)
+          : "0.0"}%
+      )
+    </div>
+  );
 
   return (
     <div>
@@ -129,13 +141,8 @@ const CreateHorariosUserPage: React.FC = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={styles.card}
                       >
-                        <strong>{h.curso}</strong> - {h.docente} <br />
-                        Aula: {h.aula || "Sin aula"} <br />
-                        Día: {h.diaSemana} <br />
-                        Hora: {h.horaInicio} - {h.horaFin} <br />
-                        Cupo: {h.cupoActual}/{h.cupoMaximo} ({h.porcentajeOcupacion?.toFixed(1) ?? 0}%)
+                        {renderCard(h)}
                       </div>
                     )}
                   </Draggable>
@@ -145,7 +152,7 @@ const CreateHorariosUserPage: React.FC = () => {
             )}
           </Droppable>
 
-          {/* Lista de inscritos con botones a la derecha */}
+          {/* Lista de inscritos */}
           <Droppable droppableId="inscritos">
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps} className={styles.list}>
@@ -163,13 +170,8 @@ const CreateHorariosUserPage: React.FC = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`${styles.card} ${styles.cardInscrito}`}
                       >
-                        <strong>{h.curso}</strong> - {h.docente} <br />
-                        Aula: {h.aula || "Sin aula"} <br />
-                        Día: {h.diaSemana} <br />
-                        Hora: {h.horaInicio} - {h.horaFin} <br />
-                        Cupo: {h.cupoActual}/{h.cupoMaximo} ({h.porcentajeOcupacion?.toFixed(1) ?? 0}%)
+                        {renderCard(h, styles.cardInscrito)}
                       </div>
                     )}
                   </Draggable>
