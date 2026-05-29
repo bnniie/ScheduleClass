@@ -1,4 +1,12 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Entidad JPA que representa un docente dentro del sistema ScheduleClass.
+//              Contiene atributos relacionados con la capacidad y características físicas,
+//              y se utiliza para persistir información en la base de datos.
+
 package co.edu.unbosque.ScheduleClass.model;
+
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -19,6 +27,12 @@ public class Docente {
 
     private boolean state = true;
 
+    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Curso> cursos;
+
+    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Horario> horarios;
+
     // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -37,4 +51,10 @@ public class Docente {
 
     public boolean isState() { return state; }
     public void setState(boolean state) { this.state = state; }
+
+    public List<Curso> getCursos() { return cursos; }
+    public void setCursos(List<Curso> cursos) { this.cursos = cursos; }
+
+    public List<Horario> getHorarios() { return horarios; }
+    public void setHorarios(List<Horario> horarios) { this.horarios = horarios; }
 }

@@ -2,10 +2,30 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";
 
+interface DocenteDTO {
+  id: number;
+  username: string;
+  dedicacion: string;
+  restricciones: string;
+  disponibilidad: string;
+  state: boolean;
+}
+
+interface Curso {
+  id: number;
+  nombre: string;
+  sesionesPorSemana: number;
+}
+
+interface Aula {
+  id: number;
+  nombre: string;
+}
+
 const HorarioForm: React.FC = () => {
-  const [docentes, setDocentes] = useState<any[]>([]);
-  const [cursos, setCursos] = useState<any[]>([]);
-  const [aulas, setAulas] = useState<any[]>([]);
+  const [docentes, setDocentes] = useState<DocenteDTO[]>([]);
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [aulas, setAulas] = useState<Aula[]>([]);
   const [formBase, setFormBase] = useState({
     docenteId: "",
     cursoId: "",
@@ -14,12 +34,28 @@ const HorarioForm: React.FC = () => {
   const [horarios, setHorarios] = useState<any[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/docentes").then(res => setDocentes(res.data));
-    axios.get("http://localhost:8080/api/cursos").then(res => setCursos(res.data));
-    axios.get("http://localhost:8080/api/aulas").then(res => setAulas(res.data));
+    axios.get("http://localhost:8080/api/docentes")
+      .then(res => setDocentes(Array.isArray(res.data) ? res.data : []))
+      .catch(err => {
+        console.error("Error cargando docentes:", err);
+        setDocentes([]);
+      });
+
+    axios.get("http://localhost:8080/api/cursos")
+      .then(res => setCursos(Array.isArray(res.data) ? res.data : []))
+      .catch(err => {
+        console.error("Error cargando cursos:", err);
+        setCursos([]);
+      });
+
+    axios.get("http://localhost:8080/api/aulas")
+      .then(res => setAulas(Array.isArray(res.data) ? res.data : []))
+      .catch(err => {
+        console.error("Error cargando aulas:", err);
+        setAulas([]);
+      });
   }, []);
 
-  // Cuando cambia el curso, se generan los bloques de horarios
   const handleCursoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const cursoId = e.target.value;
     setFormBase({ ...formBase, cursoId });
@@ -33,7 +69,7 @@ const HorarioForm: React.FC = () => {
       }));
       setHorarios(nuevosHorarios);
     } else {
-      setHorarios([]); // si no hay curso seleccionado, limpiar horarios
+      setHorarios([]);
     }
   };
 
@@ -76,11 +112,15 @@ const HorarioForm: React.FC = () => {
           required
         >
           <option value="">Seleccione docente</option>
-          {docentes.map(d => (
-            <option key={d.id} value={d.id}>
-              {d.usuario?.username}
-            </option>
-          ))}
+          {docentes.length > 0 ? (
+            docentes.map(d => (
+              <option key={d.id} value={d.id}>
+                {d.username}
+              </option>
+            ))
+          ) : (
+            <option disabled>No hay docentes disponibles</option>
+          )}
         </select>
       </div>
 
@@ -94,7 +134,11 @@ const HorarioForm: React.FC = () => {
           required
         >
           <option value="">Seleccione curso</option>
-          {cursos.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+          {cursos.length > 0 ? (
+            cursos.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)
+          ) : (
+            <option disabled>No hay cursos disponibles</option>
+          )}
         </select>
       </div>
 
@@ -108,7 +152,11 @@ const HorarioForm: React.FC = () => {
           required
         >
           <option value="">Seleccione aula</option>
-          {aulas.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
+          {aulas.length > 0 ? (
+            aulas.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)
+          ) : (
+            <option disabled>No hay aulas disponibles</option>
+          )}
         </select>
       </div>
 

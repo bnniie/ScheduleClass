@@ -13,11 +13,11 @@ import CreateHorarioPage from "../horarios/CreateHorarioPage";
 import HorariosPage from "../horarios/ListHorariosPage";
 import PlanificadorPage from "../horarios/PlanificadorPage";
 import CursosAsignadosPage from "../cursos/CursosAsignadosPage";
-import RestriccionesPage from "../docentes/RestriccionesPage";
 import CreateHorariosUserPage from "../horarios/CreateHorariosUserPage";
 import SeleccionCursosPage from "../cursos/SeleccionCursosPage";
 import CursosInscritosPage from "../cursos/CursosInscritosPage";
 import UserCalendarPage from "../horarios/UserCalendarPage";
+import DocenteCalendarPage from "../docentes/DocenteCalendarPage";
 
 const DashboardPage: React.FC = () => {
   const [selected, setSelected] = useState("home");
@@ -78,8 +78,7 @@ const DashboardPage: React.FC = () => {
           {role === "DOCENTE" && (
             <>
               {selected === "cursos_asignados" && <CursosAsignadosPage />}
-              {selected === "horarios" && <HorariosPage />}
-              {selected === "restricciones" && <RestriccionesPage />}
+              {selected === "docente_calendar" && <DocenteCalendarPage />}
             </>
           )}
         </main>

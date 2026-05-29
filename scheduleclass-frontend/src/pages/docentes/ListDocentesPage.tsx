@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { getDocentes, deleteDocente, updateDocenteState } from "../../services/docenteService";
+import { getDocentes, deleteDocente, updateDocenteState, DocenteDTO } from "../../services/docenteService";
 import styles from "../../styles/Dashboard.module.css";
 
-interface Docente {
-  id: number;
-  usuario: {
-    username: string;
-    email: string;
-  };
-  dedicacion: string;
-  restricciones: string;
-  disponibilidad: string;
-  state: boolean;
-}
-
 const ListDocentesPage: React.FC = () => {
-  const [docentes, setDocentes] = useState<Docente[]>([]);
+  const [docentes, setDocentes] = useState<DocenteDTO[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const cargarDocentes = async () => {
     try {
-      const res = await getDocentes();
-      setDocentes(res.data);
+      const data = await getDocentes();
+      console.log("Docentes cargados:", data);
+      setDocentes(data);
     } catch (error) {
       console.error("Error cargando docentes:", error);
+      setDocentes([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -31,14 +24,12 @@ const ListDocentesPage: React.FC = () => {
   }, []);
 
   const eliminarDocente = async (id: number) => {
-    if (window.confirm("¿Seguro que deseas eliminar este docente?")) {
-      try {
-        await deleteDocente(id);
-        alert("Docente eliminado");
-        cargarDocentes();
-      } catch (error) {
-        alert("Error al eliminar docente");
-      }
+    try {
+      await deleteDocente(id);
+      alert("Docente eliminado y usuario revertido a USER");
+      cargarDocentes();
+    } catch {
+      alert("Error al eliminar docente");
     }
   };
 
@@ -47,10 +38,14 @@ const ListDocentesPage: React.FC = () => {
       await updateDocenteState(id, !estadoActual);
       alert(`Docente ${!estadoActual ? "activado" : "inactivado"}`);
       cargarDocentes();
-    } catch (error) {
+    } catch {
       alert("Error al cambiar estado del docente");
     }
   };
+
+  if (loading) {
+    return <p>Cargando docentes...</p>;
+  }
 
   return (
     <div>
@@ -67,32 +62,33 @@ const ListDocentesPage: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {docentes.map((d) => (
-            <tr key={d.id}>
-              <td>{d.usuario?.username}</td>
-              <td>{d.dedicacion}</td>
-              <td>{d.restricciones}</td>
-              <td>{d.disponibilidad}</td>
-              <td>{d.state ? "Activo" : "Inactivo"}</td>
-              <td>
-                <button
-                  className={styles.buttonSecondary}
-                  onClick={() => cambiarEstado(d.id, d.state)}
-                >
-                  {d.state ? "Inactivar" : "Activar"}
-                </button>
-                <button
-                  className={styles.buttonDanger}
-                  onClick={() => eliminarDocente(d.id)}
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-          {docentes.length === 0 && (
+          {docentes.length > 0 ? (
+            docentes.map((d) => (
+              <tr key={d.id}>
+                <td>{d.username}</td>
+                <td>{d.dedicacion}</td>
+                <td>{d.restricciones}</td>
+                <td>{d.disponibilidad}</td>
+                <td>{d.state ? "Activo" : "Inactivo"}</td>
+                <td>
+                  <button
+                    className={styles.buttonSecondary}
+                    onClick={() => cambiarEstado(d.id, d.state)}
+                  >
+                    {d.state ? "Inactivar" : "Activar"}
+                  </button>
+                  <button
+                    className={styles.buttonDanger}
+                    onClick={() => eliminarDocente(d.id)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <td colSpan={7}>No hay docentes registrados</td>
+              <td colSpan={6}>No hay docentes registrados</td>
             </tr>
           )}
         </tbody>

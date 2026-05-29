@@ -1,9 +1,11 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Entidad JPA que representa un curso dentro del sistema ScheduleClass.
+//              Contiene atributos relacionados con la capacidad y características físicas,
+//              y se utiliza para persistir información en la base de datos.
+
 package co.edu.unbosque.ScheduleClass.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +23,10 @@ public class Curso {
     private int creditos;
 
     private String codigo;
+
+    @ManyToOne
+    @JoinColumn(name = "docente_id")
+    private Docente docente;
 
     // Getters y Setters
     public Long getId() { return id; }
@@ -43,4 +49,7 @@ public class Curso {
 
     public String getCodigo() { return codigo; }
     public void setCodigo(String codigo) { this.codigo = codigo; }
+
+    public Docente getDocente() { return docente; }
+    public void setDocente(Docente docente) { this.docente = docente; }
 }

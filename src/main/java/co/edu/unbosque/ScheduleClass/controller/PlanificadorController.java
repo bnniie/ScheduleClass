@@ -1,3 +1,8 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Controlador REST para planificador de horarios en el sistema ScheduleClass.
+//              Proporciona operaciones para generar un horario de manera automatizada.
+
 package co.edu.unbosque.ScheduleClass.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -32,6 +37,7 @@ public class PlanificadorController {
         this.aulaRepository = aulaRepository;
     }
 
+    // Generar horario automatizado
     @PostMapping
     public ResponseEntity<String> generar(@RequestBody DatosPlanificadorDTO datos) {
         List<Curso> cursos = cursoRepository.findAllById(datos.getCursos());

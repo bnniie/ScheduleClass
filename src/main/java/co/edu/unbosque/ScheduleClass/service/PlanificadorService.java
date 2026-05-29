@@ -1,3 +1,8 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Servicio de negocio para la gestión del planificador en el sistema ScheduleClass.
+//              Encapsula la lógica de acceso a datos y proporciona operaciones CRUD
+
 package co.edu.unbosque.ScheduleClass.service;
 
 import org.springframework.stereotype.Service;

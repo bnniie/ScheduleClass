@@ -1,6 +1,12 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Controlador REST para la gestión de usuarios en el sistema ScheduleClass.
+//              Proporciona operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre la entidad Usuario.
+
 package co.edu.unbosque.ScheduleClass.controller;
 
 import co.edu.unbosque.ScheduleClass.dto.HorarioDisponibleDTO;
+import co.edu.unbosque.ScheduleClass.dto.UsuarioDTO;
 import co.edu.unbosque.ScheduleClass.model.Usuario;
 import co.edu.unbosque.ScheduleClass.model.Horario;
 import co.edu.unbosque.ScheduleClass.model.Curso;
@@ -39,8 +45,10 @@ public class UsuarioController {
 
     // Listar todos los usuarios
     @GetMapping
-    public List<Usuario> getAllUsers() {
-        return usuarioService.getAllUsers();
+    public List<UsuarioDTO> getAllUsers() {
+        return usuarioService.getAllUsers().stream()
+                .map(u -> new UsuarioDTO(u.getId(), u.getUsername(), u.getRole()))
+                .collect(Collectors.toList());
     }
 
     // Obtener usuario por ID
