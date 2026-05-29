@@ -24,34 +24,37 @@ public class HorarioController {
         this.horarioRepository = horarioRepository;
     }
 
-    // Listar todos los horarios
+    // Listar todos los horarios (como DTO)
     @GetMapping
-    public List<Horario> listar() {
-        return horarioService.listar();
+    public List<HorarioDisponibleDTO> listar() {
+        return horarioRepository.findAll().stream()
+            .map(this::convertirADTO)
+            .collect(Collectors.toList());
     }
 
-    // Crear un solo horario
+    // Crear un solo horario y devolverlo como DTO
     @PostMapping
-    public Horario crear(@RequestBody Horario horario) {
-        return horarioService.crearHorario(horario);
+    public HorarioDisponibleDTO crear(@RequestBody Horario horario) {
+        Horario creado = horarioService.crearHorario(horario);
+        return convertirADTO(creado);
     }
 
-    // Crear varios horarios en lote
+    // Crear varios horarios en lote y devolverlos como DTO
     @PostMapping("/lote")
-    public ResponseEntity<List<Horario>> crearHorarios(@RequestBody List<Horario> horarios) {
-        List<Horario> creados = new ArrayList<>();
+    public ResponseEntity<List<HorarioDisponibleDTO>> crearHorarios(@RequestBody List<Horario> horarios) {
+        List<HorarioDisponibleDTO> creados = new ArrayList<>();
         for (Horario h : horarios) {
             Horario creado = horarioService.crearHorario(h);
-            creados.add(creado);
+            creados.add(convertirADTO(creado));
         }
         return ResponseEntity.ok(creados);
     }
 
-    // Obtener horario por ID
+    // Obtener horario por ID (como DTO)
     @GetMapping("/{id}")
-    public ResponseEntity<Horario> obtener(@PathVariable Long id) {
+    public ResponseEntity<HorarioDisponibleDTO> obtener(@PathVariable Long id) {
         Optional<Horario> horario = horarioRepository.findById(id);
-        return horario.map(ResponseEntity::ok)
+        return horario.map(h -> ResponseEntity.ok(convertirADTO(h)))
                       .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -70,19 +73,33 @@ public class HorarioController {
     public List<HorarioDisponibleDTO> listarDisponibles() {
         return horarioRepository.findAll().stream()
             .filter(h -> h.getCupoActual() < h.getCupoMaximo())
-            .map(h -> new HorarioDisponibleDTO(
-                h.getId(),
-                h.getCurso() != null ? h.getCurso().getNombre() : "Sin curso",
-                (h.getDocente() != null && h.getDocente().getUsuario() != null) 
-                    ? h.getDocente().getUsuario().getUsername() 
-                    : "Sin docente",
-                h.getAula() != null ? h.getAula().getNombre() : "Sin aula",
-                h.getDiaSemana(),
-                h.getHoraInicio(),
-                h.getHoraFin(),
-                h.getCupoActual(),
-                h.getCupoMaximo()
-            ))
+            .map(this::convertirADTO)
             .collect(Collectors.toList());
+    }
+
+    // Método privado para convertir Horario en HorarioDisponibleDTO
+    private HorarioDisponibleDTO convertirADTO(Horario h) {
+        String cursoNombre = (h.getCurso() != null) ? h.getCurso().getNombre() : "Sin curso";
+        String docenteNombre = (h.getDocente() != null && h.getDocente().getUsuario() != null)
+                ? h.getDocente().getUsuario().getUsername()
+                : "Sin docente";
+        String aulaNombre = (h.getAula() != null) ? h.getAula().getNombre() : "Sin aula";
+
+        boolean computadores = (h.getAula() != null) && h.getAula().isComputadores();
+        boolean sillasMoviles = (h.getAula() != null) && h.getAula().isSillasMoviles();
+
+        return new HorarioDisponibleDTO(
+            h.getId(),
+            cursoNombre,
+            docenteNombre,
+            aulaNombre,
+            h.getDiaSemana(),
+            h.getHoraInicio(),
+            h.getHoraFin(),
+            h.getCupoActual(),
+            h.getCupoMaximo(),
+            computadores,
+            sillasMoviles
+        );
     }
 }

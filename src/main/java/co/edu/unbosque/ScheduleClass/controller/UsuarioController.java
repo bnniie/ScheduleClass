@@ -1,5 +1,6 @@
 package co.edu.unbosque.ScheduleClass.controller;
 
+import co.edu.unbosque.ScheduleClass.dto.HorarioDisponibleDTO;
 import co.edu.unbosque.ScheduleClass.model.Usuario;
 import co.edu.unbosque.ScheduleClass.model.Horario;
 import co.edu.unbosque.ScheduleClass.model.Curso;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -98,26 +100,73 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    // Listar horarios inscritos de un usuario por ID
+    // Listar horarios inscritos de un usuario por ID (devuelve DTO)
     @GetMapping("/{usuarioId}/horarios")
-    public ResponseEntity<List<Horario>> getHorariosInscritos(@PathVariable Long usuarioId) {
+    public ResponseEntity<List<HorarioDisponibleDTO>> getHorariosInscritos(@PathVariable Long usuarioId) {
         Optional<Usuario> usuarioOpt = usuarioService.getUserById(usuarioId);
         if (usuarioOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(usuarioOpt.get().getHorariosInscritos());
+        List<HorarioDisponibleDTO> dtos = usuarioOpt.get().getHorariosInscritos().stream()
+            .map(this::convertirADTO)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
-    // Listar horarios inscritos de un usuario por username
+    // Listar horarios inscritos de un usuario por username (devuelve DTO)
     @GetMapping("/username/{username}/horarios")
-    public ResponseEntity<List<Horario>> getHorariosInscritosPorUsername(@PathVariable String username) {
+    public ResponseEntity<List<HorarioDisponibleDTO>> getHorariosInscritosPorUsername(@PathVariable String username) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
         if (usuarioOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(usuarioOpt.get().getHorariosInscritos());
+        List<HorarioDisponibleDTO> dtos = usuarioOpt.get().getHorariosInscritos().stream()
+            .map(this::convertirADTO)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
+    // Listar horarios disponibles de un usuario (solo cursos inscritos y con cupo libre)
+    @GetMapping("/username/{username}/horarios/disponibles")
+    public ResponseEntity<List<HorarioDisponibleDTO>> listarDisponiblesPorUsuario(@PathVariable String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        List<HorarioDisponibleDTO> dtos = horarioRepository.findAll().stream()
+            .filter(h -> h.getCupoActual() < h.getCupoMaximo()) // solo horarios con cupo
+            .filter(h -> usuario.getCursos().contains(h.getCurso())) // solo cursos inscritos del usuario
+            .map(this::convertirADTO)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    // Método privado para convertir Horario en HorarioDisponibleDTO
+    private HorarioDisponibleDTO convertirADTO(Horario h) {
+        String cursoNombre = (h.getCurso() != null) ? h.getCurso().getNombre() : "Sin curso";
+        String docenteNombre = (h.getDocente() != null && h.getDocente().getUsuario() != null)
+                ? h.getDocente().getUsuario().getUsername()
+                : "Sin docente";
+        String aulaNombre = (h.getAula() != null) ? h.getAula().getNombre() : "Sin aula";
+
+        boolean computadores = (h.getAula() != null) && h.getAula().isComputadores();
+        boolean sillasMoviles = (h.getAula() != null) && h.getAula().isSillasMoviles();
+
+        return new HorarioDisponibleDTO(
+            h.getId(),
+            cursoNombre,
+            docenteNombre,
+            aulaNombre,
+            h.getDiaSemana(),
+            h.getHoraInicio(),
+            h.getHoraFin(),
+            h.getCupoActual(),
+            h.getCupoMaximo(),
+            computadores,
+            sillasMoviles
+        );
+    }
+    
     // Guardar cursos seleccionados por username con validaciones
     @PostMapping("/username/{username}/cursos")
     public ResponseEntity<?> inscribirCursosPorUsername(
@@ -180,5 +229,36 @@ public class UsuarioController {
         usuarioRepository.save(usuario);
 
         return ResponseEntity.ok(Map.of("message", "Curso eliminado correctamente"));
+    }
+
+    // Eliminar horario inscrito por username
+    @DeleteMapping("/username/{username}/horarios/{horarioId}")
+    public ResponseEntity<?> eliminarHorarioInscrito(
+            @PathVariable String username,
+            @PathVariable Long horarioId) {
+
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        Horario horario = horarioRepository.findById(horarioId)
+                .orElseThrow(() -> new IllegalArgumentException("Horario no encontrado"));
+
+        if (!usuario.getHorariosInscritos().contains(horario)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "El usuario no está inscrito en este horario"));
+        }
+
+        // quitar el horario del usuario
+        usuario.getHorariosInscritos().remove(horario);
+
+        // actualizar cupo
+        if (horario.getCupoActual() > 0) {
+            horario.setCupoActual(horario.getCupoActual() - 1);
+        }
+
+        usuarioRepository.save(usuario);
+        horarioRepository.save(horario);
+
+        return ResponseEntity.ok(Map.of("message", "Horario eliminado correctamente"));
     }
 }

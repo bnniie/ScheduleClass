@@ -4,9 +4,9 @@ import styles from "../../styles/Dashboard.module.css";
 
 interface Horario {
   id: number;
-  docente: { usuario: { username: string } };
-  curso: { nombre: string };
-  aula: { nombre: string };
+  curso: string;
+  docente: string;
+  aula: string;
   diaSemana: string;
   horaInicio: string;
   horaFin: string;
@@ -56,9 +56,9 @@ const ListHorariosPage: React.FC = () => {
         <tbody>
           {horarios.map((h) => (
             <tr key={h.id}>
-              <td>{h.curso?.nombre}</td>
-              <td>{h.docente?.usuario?.username}</td>
-              <td>{h.aula?.nombre}</td>
+              <td>{h.curso}</td>
+              <td>{h.docente}</td>
+              <td>{h.aula}</td>
               <td>{h.diaSemana}</td>
               <td>{h.horaInicio}</td>
               <td>{h.horaFin}</td>

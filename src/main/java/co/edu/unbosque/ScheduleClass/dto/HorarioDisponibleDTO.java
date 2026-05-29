@@ -11,10 +11,13 @@ public class HorarioDisponibleDTO {
     private int cupoActual;
     private int cupoMaximo;
     private double porcentajeOcupacion;
+    private boolean computadores;
+    private boolean sillasMoviles;
 
     public HorarioDisponibleDTO(Long id, String curso, String docente, String aula,
                                 String diaSemana, String horaInicio, String horaFin,
-                                int cupoActual, int cupoMaximo) {
+                                int cupoActual, int cupoMaximo,
+                                boolean computadores, boolean sillasMoviles) {
         this.id = id;
         this.curso = (curso != null) ? curso : "Sin curso";
         this.docente = (docente != null) ? docente : "Sin docente";
@@ -25,6 +28,8 @@ public class HorarioDisponibleDTO {
         this.cupoActual = cupoActual;
         this.cupoMaximo = cupoMaximo;
         this.porcentajeOcupacion = (cupoMaximo > 0) ? ((double)cupoActual / cupoMaximo) * 100 : 0;
+        this.computadores = computadores;
+        this.sillasMoviles = sillasMoviles;
     }
 
     // Getters
@@ -38,4 +43,6 @@ public class HorarioDisponibleDTO {
     public int getCupoActual() { return cupoActual; }
     public int getCupoMaximo() { return cupoMaximo; }
     public double getPorcentajeOcupacion() { return porcentajeOcupacion; }
+    public boolean isComputadores() { return computadores; }
+    public boolean isSillasMoviles() { return sillasMoviles; }
 }
