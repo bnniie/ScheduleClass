@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 26/05/26
+// Descripción: Página React para el dashboard de, Docente, Estudiante y Admin en el sistema ScheduleClass.
+
 import React, { useState } from "react";
 import Navbar from "../../components/layout/Navbar";
 import Sidebar from "../../components/layout/Sidebar";

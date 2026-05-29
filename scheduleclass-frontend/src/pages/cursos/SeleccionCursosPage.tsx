@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 28/05/26
+// Descripción: Página React para que el Estudiante pueda seleccionar cursos en el sistema ScheduleClass.
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";

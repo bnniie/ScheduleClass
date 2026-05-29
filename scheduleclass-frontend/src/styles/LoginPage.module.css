@@ -1,3 +1,10 @@
+/* Autor: Paula Guerrero
+   Fecha: 26/05/26
+   Descripción: Hoja de estilos para el login de ScheduleClass.
+                Define la estructura visual, tipografía, colores y estilos
+                de formularios, botones, tablas y componentes interactivos.
+*/
+
 .loginContainer {
   background-color: #FFFFFF;
   height: 100vh;              

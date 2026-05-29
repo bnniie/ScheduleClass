@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Componente React que representa la barra de navegación de opciones
+//              de la aplicación ScheduleClass. Muestra la lista de las opciones,
+//              y permite la navegación dentro del Dashboard.
+
 import React from "react";
 import styles from "../../styles/Sidebar.module.css";
 

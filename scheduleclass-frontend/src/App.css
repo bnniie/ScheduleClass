@@ -1,3 +1,10 @@
+/* Autor: Paula Guerrero
+   Fecha: 25/05/26
+   Descripción: Hoja de estilos base para la aplicación ScheduleClass.
+                Define la apariencia general de la aplicación, incluyendo
+                el logo, el encabezado y los enlaces, además de animaciones.
+*/
+
 .App {
   text-align: center;
 }

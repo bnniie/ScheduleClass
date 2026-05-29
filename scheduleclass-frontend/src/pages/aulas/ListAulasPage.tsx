@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 26/05/26
+// Descripción: Página React para el listado de aulas en el sistema ScheduleClass.
+
 import React, { useEffect, useState } from "react";
 import { getAulas, deleteAula } from "../../services/aulaService";
 import styles from "../../styles/Dashboard.module.css";

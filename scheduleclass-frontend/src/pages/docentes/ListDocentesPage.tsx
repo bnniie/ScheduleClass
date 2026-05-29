@@ -1,3 +1,7 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Página React para el listado de docentes en el sistema ScheduleClass.
+
 import React, { useEffect, useState } from "react";
 import { getDocentes, deleteDocente, updateDocenteState, DocenteDTO } from "../../services/docenteService";
 import styles from "../../styles/Dashboard.module.css";

@@ -1,3 +1,10 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Componente raíz de la aplicación ScheduleClass.
+//              Define la configuración de rutas mediante React Router,
+//              organizando las páginas de autenticación, dashboard,
+//              docentes, aulas, cursos y horarios.
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

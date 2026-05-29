@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 26/05/26
+// Descripción: Componente React para el registro de horarios en el sistema ScheduleClass.
+//              Permite crear un horario con docente, aula, curso, día de la semana, hora.
+//              validando la disponibilidad del docente, aula y hora.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/Dashboard.module.css";

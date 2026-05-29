@@ -1,3 +1,10 @@
+// Autor: Paula Guerrero
+// Fecha: 25/05/26
+// Descripción: Punto de entrada principal de la aplicación ScheduleClass.
+//              Renderiza el componente raíz <App /> dentro del DOM,
+//              aplica estilos globales y habilita la medición de métricas
+//              de rendimiento con reportWebVitals.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

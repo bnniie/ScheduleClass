@@ -1,3 +1,8 @@
+// Autor: Paula Guerrero
+// Fecha: 26/05/26
+// Descripción: Componente React para el registro de cursos en el sistema ScheduleClass.
+//              validando la capacidad mínima y máxima antes de enviar los datos al backend.
+
 import React, { useState } from "react";
 import { createCurso } from "../../services/cursoService";
 import styles from "../../styles/Dashboard.module.css";

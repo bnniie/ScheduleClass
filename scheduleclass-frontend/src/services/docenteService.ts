@@ -1,3 +1,9 @@
+// Autor: Paula Guerrero
+// Fecha: 28/05/26
+// Descripción: Servicio de comunicación con el backend para la gestión de docentes.
+//              Define funciones que realizan peticiones HTTP (GET, POST, DELETE)
+//              hacia la API REST de ScheduleClass usando Axios.
+
 import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/docentes";
