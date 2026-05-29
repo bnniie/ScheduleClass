@@ -1,0 +1,33 @@
+# Autor: Paula Guerrero
+# Fecha: 29/05/26
+# Descripción: Archivo de exclusiones para ESLint en el proyecto ScheduleClass.
+#              Define qué carpetas y archivos no deben ser analizados por el linter,
+#              evitando revisar dependencias externas, compilados, configuraciones
+#              y archivos generados automáticamente.
+
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Compilados y distribuciones
+build/
+dist/
+coverage/
+
+# Configuraciones y archivos auxiliares
+.eslintrc.js
+.eslintrc.cjs
+eslint.config.mjs
+
+# Cachés y temporales
+*.log
+*.tmp
+*.cache
+
+# Tipado generado
+*.d.ts
+
+# Directorios específicos de IDE
+.vscode/
+.idea/
